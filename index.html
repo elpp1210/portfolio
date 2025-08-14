@@ -1,318 +1,302 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Byun Jiwon — Portfolio</title>
+  <meta name="description" content="곰팡이의 시간성과 부재를 탐구하는 작가 변지원 포트폴리오" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b0b0c;
+      --card: #141417;
+      --text: #f3f3f5;
+      --muted: #a3a3ad;
+      --accent: #b1ff95;
+      --ring: rgba(177,255,149,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:"Inter","Pretendard",system-ui,-apple-system,Segoe UI,Roboto,Arial,Apple SD Gothic Neo,Noto Sans KR,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .wrap{display:grid;grid-template-rows:auto 1fr auto;min-height:100dvh}
+    header{position:sticky;top:0;backdrop-filter:saturate(140%) blur(10px);background:linear-gradient(180deg,rgba(11,11,12,.8),rgba(11,11,12,.4));border-bottom:1px solid rgba(255,255,255,.06);z-index:9}
+    .nav{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px var(--ring)}
+    .brand h1{font-size:16px;letter-spacing:.3px;margin:0;font-weight:600}
+    .spacer{flex:1}
+    .controls{display:flex;gap:10px;align-items:center}
+    .btn, .chip{appearance:none;border:1px solid rgba(255,255,255,.12);background:var(--card);color:var(--text);padding:10px 12px;border-radius:999px;font-size:13px;line-height:1;display:inline-flex;gap:8px;align-items:center;cursor:pointer;transition:.2s ease}
+    .btn:hover,.chip:hover{border-color:rgba(255,255,255,.28);transform:translateY(-1px)}
+    .btn[aria-pressed="true"], .chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
+    .search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid rgba(255,255,255,.12);padding:10px 12px;border-radius:12px;min-width:220px}
+    .search input{background:transparent;border:none;color:var(--text);outline:none;width:160px}
+    main{max-width:1200px;margin:0 auto;padding:28px 20px}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin:8px 0 18px}
+    .hero .card{border:1px solid rgba(255,255,255,.08);background:radial-gradient(1200px 500px at 0% -10%,rgba(177,255,149,.06),transparent 40%),var(--card);border-radius:20px;padding:18px}
+    .hero h2{margin:0 0 8px;font-weight:600;letter-spacing:.2px}
+    .hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+
+    /* Gallery */
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .item{grid-column:span 4;position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#19191c,#111113);border:1px solid rgba(255,255,255,.08);transition:transform .2s ease, box-shadow .2s ease}
+    .item:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.35)}
+    .item figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden}
+    .item img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05)}
+    .item .meta{display:flex;flex-direction:column;gap:6px;padding:12px 12px 14px}
+    .item .title{font-size:14px;font-weight:600}
+    .item .desc{font-size:12px;color:var(--muted)}
+    .badge{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.58);backdrop-filter:blur(6px);padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);font-size:11px}
+    .fav{position:absolute;right:10px;top:10px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);width:34px;height:34px;border-radius:999px;display:grid;place-items:center;cursor:pointer}
+
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
+    .lightbox.open{display:flex}
+    .lightbox .frame{max-width:min(1100px,92vw);max-height:86vh;border-radius:20px;overflow:hidden;background:#0f0f11;border:1px solid rgba(255,255,255,.15);display:grid;grid-template-rows:auto 1fr}
+    .lightbox header{position:relative;background:linear-gradient(180deg,#0f0f11,#0b0b0c);border-bottom:1px solid rgba(255,255,255,.1)}
+    .lb-top{display:flex;align-items:center;gap:10px;padding:10px 12px}
+    .lb-title{font-weight:600}
+    .lb-body{display:grid;grid-template-columns:1fr 380px}
+    .lb-media{background:#0b0b0c;display:grid;place-items:center}
+    .lb-media img{max-width:100%;max-height:76vh;object-fit:contain}
+    .lb-aside{border-left:1px solid rgba(255,255,255,.08);padding:14px 14px 18px;overflow:auto}
+    .lb-aside h3{margin:0 0 8px;font-size:14px}
+    .lb-aside p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.6}
+
+    footer{border-top:1px solid rgba(255,255,255,.08);padding:24px 20px;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width: 1024px){
+      .hero{grid-template-columns:1fr}
+      .grid{gap:10px}
+      .item{grid-column:span 6}
+      .lb-body{grid-template-columns:1fr}
+    }
+    @media (max-width: 640px){
+      .item{grid-column:span 12}
+      .search{min-width:0}
+      .search input{width:100%}
+      .btn,.chip{padding:9px 10px;font-size:12px}
+    }
   </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="ko"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Byun Jiwon — Portfolio&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="description" content="곰팡이의 시간성과 부재를 탐구하는 작가 변지원 포트폴리오" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>:root{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--bg: #0b0b0c;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--card: #141417;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--text: #f3f3f5;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--muted: #a3a3ad;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--accent: #b1ff95;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--ring: rgba(177,255,149,.45);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>*{box-sizing:border-box}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:"Inter","Pretendard",system-ui,-apple-system,Segoe UI,Roboto,Arial,Apple SD Gothic Neo,Noto Sans KR,sans-serif}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>a{color:inherit;text-decoration:none}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.wrap{display:grid;grid-template-rows:auto 1fr auto;min-height:100dvh}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>header{position:sticky;top:0;backdrop-filter:saturate(140%) blur(10px);background:linear-gradient(180deg,rgba(11,11,12,.8),rgba(11,11,12,.4));border-bottom:1px solid rgba(255,255,255,.06);z-index:9}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;padding:14px 20px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.brand{display:flex;align-items:center;gap:10px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px var(--ring)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.brand h1{font-size:16px;letter-spacing:.3px;margin:0;font-weight:600}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.spacer{flex:1}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.controls{display:flex;gap:10px;align-items:center}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn, .chip{appearance:none;border:1px solid rgba(255,255,255,.12);background:var(--card);color:var(--text);padding:10px 12px;border-radius:999px;font-size:13px;line-height:1;display:inline-flex;gap:8px;align-items:center;cursor:pointer;transition:.2s ease}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn:hover,.chip:hover{border-color:rgba(255,255,255,.28);transform:translateY(-1px)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn[aria-pressed="true"], .chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid rgba(255,255,255,.12);padding:10px 12px;border-radius:12px;min-width:220px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.search input{background:transparent;border:none;color:var(--text);outline:none;width:160px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>main{max-width:1200px;margin:0 auto;padding:28px 20px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin:8px 0 18px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero .card{border:1px solid rgba(255,255,255,.08);background:radial-gradient(1200px 500px at 0% -10%,rgba(177,255,149,.06),transparent 40%),var(--card);border-radius:20px;padding:18px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero h2{margin:0 0 8px;font-weight:600;letter-spacing:.2px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Gallery */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.item{grid-column:span 4;position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#19191c,#111113);border:1px solid rgba(255,255,255,.08);transition:transform .2s ease, box-shadow .2s ease}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.item:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.35)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.item figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.item img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.item .meta{display:flex;flex-direction:column;gap:6px;padding:12px 12px 14px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.item .title{font-size:14px;font-weight:600}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.item .desc{font-size:12px;color:var(--muted)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.badge{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.58);backdrop-filter:blur(6px);padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);font-size:11px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.fav{position:absolute;right:10px;top:10px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);width:34px;height:34px;border-radius:999px;display:grid;place-items:center;cursor:pointer}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Lightbox */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lightbox.open{display:flex}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lightbox .frame{max-width:min(1100px,92vw);max-height:86vh;border-radius:20px;overflow:hidden;background:#0f0f11;border:1px solid rgba(255,255,255,.15);display:grid;grid-template-rows:auto 1fr}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lightbox header{position:relative;background:linear-gradient(180deg,#0f0f11,#0b0b0c);border-bottom:1px solid rgba(255,255,255,.1)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-top{display:flex;align-items:center;gap:10px;padding:10px 12px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-title{font-weight:600}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-body{display:grid;grid-template-columns:1fr 380px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-media{background:#0b0b0c;display:grid;place-items:center}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-media img{max-width:100%;max-height:76vh;object-fit:contain}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-aside{border-left:1px solid rgba(255,255,255,.08);padding:14px 14px 18px;overflow:auto}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-aside h3{margin:0 0 8px;font-size:14px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lb-aside p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.6}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>footer{border-top:1px solid rgba(255,255,255,.08);padding:24px 20px;color:var(--muted)}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Responsive */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width: 1024px){</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.hero{grid-template-columns:1fr}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.grid{gap:10px}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.item{grid-column:span 6}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.lb-body{grid-template-columns:1fr}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width: 640px){</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.item{grid-column:span 12}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.search{min-width:0}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.search input{width:100%}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.btn,.chip{padding:9px 10px;font-size:12px}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1">&lt;div class="wrap"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;nav class="nav" aria-label="주요"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="brand"&gt;&lt;span class="dot" aria-hidden="true"&gt;&lt;/span&gt;&lt;h1&gt;Byun Jiwon&lt;/h1&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="spacer"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="controls"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="search" role="search"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"&gt;&lt;path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/&gt;&lt;circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/&gt;&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;input id="q" type="search" placeholder="검색: 작품 제목/재료" aria-label="작품 검색" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn" id="aboutBtn" aria-controls="about" aria-expanded="false"&gt;About&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a class="btn" href="#contact"&gt;Contact&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/nav&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;main&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;section class="hero" aria-label="소개"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;흔적, 부재, 곰팡이&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;곰팡이라는 소재를 통해 시간의 흐름과 존재의 빈자리를 탐구합니다. 보통은 배제되는 곰팡이를 위로의 존재로 바라보며, 대형 가구/조형 작업으로 확장합니다. 공간과 사람 사이의 새로운 공존을 제안합니다.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;필터&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="filters" role="group" aria-label="작품 필터"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="chip" data-filter="all" aria-pressed="true"&gt;전체&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="chip" data-filter="furniture"&gt;가구형&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="chip" data-filter="lighting"&gt;조명&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="chip" data-filter="sculpture"&gt;조형&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="chip" data-filter="2025"&gt;2025&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="chip" data-filter="2024"&gt;2024&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;section aria-label="갤러리"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="grid" class="grid" role="list"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;footer id="contact"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="max-width:1200px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;small&gt;© &lt;span id="year"&gt;&lt;/span&gt; Byun Jiwon. All rights reserved.&lt;/small&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a class="chip" href="mailto:hello@example.com" aria-label="이메일 보내기"&gt;메일&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a class="chip" href="https://www.instagram.com/" target="_blank" rel="noreferrer"&gt;Instagram&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/footer&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- Lightbox --&gt;</p>
-<p class="p1">&lt;div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="frame"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="lb-top"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="brand"&gt;&lt;span class="dot" aria-hidden="true"&gt;&lt;/span&gt;&lt;div class="lb-title" id="lbTitle"&gt;작품 제목&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="spacer"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn" id="closeLb" aria-label="닫기"&gt;닫기&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="lb-body"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="lb-media"&gt;&lt;img id="lbImg" alt="작품 확대 이미지" /&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;aside class="lb-aside"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;작품 정보&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p id="lbMeta"&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;설명&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p id="lbDesc"&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/aside&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- About Modal (visually uses lightbox) --&gt;</p>
-<p class="p1">&lt;div id="about" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="frame"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="lb-top"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="brand"&gt;&lt;span class="dot" aria-hidden="true"&gt;&lt;/span&gt;&lt;div class="lb-title"&gt;About&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="spacer"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn" id="closeAbout" aria-label="닫기"&gt;닫기&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="lb-body" style="grid-template-columns:1fr"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="lb-aside" style="border-left:none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;변지원 | Byun Jiwon&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;곰팡이의 생장과 흔적을 조형 언어로 번역하여, 부재의 감정과 시간의 층위를 가구/조명/조형물로 구현합니다. 공간과 사람 사이의 숨은 감정을 드러내는 설치를 지향합니다.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;strong&gt;이메일&lt;/strong&gt; hello@example.com &amp;nbsp;·&amp;nbsp; &lt;strong&gt;인스타그램&lt;/strong&gt; @your_id&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// ---- Sample data (이미지와 메타데이터) ----</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const ITEMS = [</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:1, title:"더미 더미 01", year:2024, type:"sculpture", material:"도자, 혼합재료", size:"120×80×60cm", cover:"https://picsum.photos/id/1011/800/600", desc:"구석으로 밀려난 감정의 덩어리를 형상화."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:2, title:"Mold Light A", year:2025, type:"lighting", material:"도자, G8 소켓, LED", size:"Ø18×H24cm", cover:"https://picsum.photos/id/1015/800/600", desc:"곰팡이의 포자처럼 번지는 빛."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:3, title:"Trace of Absence", year:2025, type:"furniture", material:"도자, 목재", size:"W90×D40×H45cm", cover:"https://picsum.photos/id/1025/800/600", desc:"부재가 남긴 흔적을 가구 스케일로 번역."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:4, title:"Spore Growth", year:2024, type:"sculpture", material:"도자, 스테인리스", size:"150×70×70cm", cover:"https://picsum.photos/id/1003/800/600", desc:"포자가 위로 자라나 공간을 점유하는 장면."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:5, title:"Soft Table (mold)", year:2023, type:"furniture", material:"도자, 강철", size:"W110×D60×H35cm", cover:"https://picsum.photos/id/1035/800/600", desc:"부드러운 달 조각 같은 곡률의 모듈."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:6, title:"Letters I Never Sent", year:2025, type:"sculpture", material:"도자, 종이, 혼합", size:"가변 설치", cover:"https://picsum.photos/id/1040/800/600", desc:"상자 속 잘린 편지—남겨진 감정의 잔재."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:7, title:"Mold Light B", year:2024, type:"lighting", material:"도자, G8 소켓, LED", size:"Ø16×H22cm", cover:"https://picsum.photos/id/1016/800/600", desc:"표면에 피어난 균사의 결을 빛으로."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:8, title:"Corner Growth", year:2025, type:"sculpture", material:"도자", size:"80×50×40cm", cover:"https://picsum.photos/id/1020/800/600", desc:"구석에서 은밀히 시작되는 생장."},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{id:9, title:"Mold Stool Module", year:2025, type:"furniture", material:"도자", size:"W40×D32×H36cm", cover:"https://picsum.photos/id/1067/800/600", desc:"이음새 틈 없이 이어지는 모듈 스툴."}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const grid = document.getElementById('grid');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const year = document.getElementById('year');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>year.textContent = new Date().getFullYear();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function render(items){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>grid.innerHTML = '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const frag = document.createDocumentFragment();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>items.forEach(item=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const li = document.createElement('article');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>li.className = 'item';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>li.setAttribute('role','listitem');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>li.dataset.type = item.type;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>li.dataset.year = item.year;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>li.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;figure&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;img loading="lazy" src="${item.cover}" alt="${item.title} 표지 이미지" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="badge"&gt;${item.year} · ${label(item.type)}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="fav" aria-label="좋아요" title="좋아요"&gt;❤&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/figure&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="meta"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="title"&gt;${item.title}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="desc"&gt;${item.material} · ${item.size}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>li.addEventListener('click', (e)=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>// avoid when clicking fav</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if(e.target.closest('.fav')){ e.stopPropagation(); e.preventDefault(); e.target.classList.toggle('on'); return; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>openLightbox(item);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>frag.appendChild(li);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>grid.appendChild(frag);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function label(type){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return ({furniture:'가구', lighting:'조명', sculpture:'조형'}[type]||type)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function filterBy(key){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(key==='all') return render(ITEMS);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const out = ITEMS.filter(it=&gt; String(it.year)===key || it.type===key);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>render(out);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// initial render</p>
-<p class="p1"><span class="Apple-converted-space">  </span>render(ITEMS);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// filters</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('.chip').forEach(ch=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ch.addEventListener('click',()=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.querySelectorAll('.chip').forEach(c=&gt;c.setAttribute('aria-pressed','false'));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ch.setAttribute('aria-pressed','true');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>filterBy(ch.dataset.filter);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// search</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const q = document.getElementById('q');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>q.addEventListener('input',()=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const s = q.value.trim().toLowerCase();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const out = ITEMS.filter(it=&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>it.title.toLowerCase().includes(s) ||</p>
-<p class="p1"><span class="Apple-converted-space">      </span>it.material.toLowerCase().includes(s) ||</p>
-<p class="p1"><span class="Apple-converted-space">      </span>(it.desc||'').toLowerCase().includes(s)</p>
-<p class="p1"><span class="Apple-converted-space">    </span>);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>render(out);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// lightbox</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lb = document.getElementById('lightbox');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lbImg = document.getElementById('lbImg');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lbTitle = document.getElementById('lbTitle');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lbMeta = document.getElementById('lbMeta');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lbDesc = document.getElementById('lbDesc');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const closeLb = document.getElementById('closeLb');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function openLightbox(item){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lbImg.src = item.cover;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lbTitle.textContent = item.title;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lbMeta.textContent = `${item.year} · ${label(item.type)} · ${item.material} · ${item.size}`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lbDesc.textContent = item.desc || '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lb.classList.add('open');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lb.setAttribute('aria-hidden','false');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.body.style.overflow='hidden';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function closeLightbox(){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lb.classList.remove('open');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lb.setAttribute('aria-hidden','true');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.body.style.overflow='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>closeLb.addEventListener('click', closeLightbox);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>lb.addEventListener('click', (e)=&gt;{ if(e.target===lb) closeLightbox(); });</p>
-<p class="p1"><span class="Apple-converted-space">  </span>window.addEventListener('keydown', (e)=&gt;{ if(e.key==='Escape') closeLightbox(); });</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// About modal share styles</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const about = document.getElementById('about');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const aboutBtn = document.getElementById('aboutBtn');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const closeAbout = document.getElementById('closeAbout');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>aboutBtn.addEventListener('click',()=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const expanded = aboutBtn.getAttribute('aria-expanded')==='true';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>aboutBtn.setAttribute('aria-expanded', String(!expanded));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>about.classList.add('open'); about.setAttribute('aria-hidden','false');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.body.style.overflow='hidden';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>closeAbout.addEventListener('click',()=&gt;{ about.classList.remove('open'); about.setAttribute('aria-hidden','true'); document.body.style.overflow=''; aboutBtn.setAttribute('aria-expanded','false'); });</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<div class="wrap">
+  <header>
+    <nav class="nav" aria-label="주요">
+      <div class="brand"><span class="dot" aria-hidden="true"></span><h1>Byun Jiwon</h1></div>
+      <div class="spacer"></div>
+      <div class="controls">
+        <div class="search" role="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          <input id="q" type="search" placeholder="검색: 작품 제목/재료" aria-label="작품 검색" />
+        </div>
+        <button class="btn" id="aboutBtn" aria-controls="about" aria-expanded="false">About</button>
+        <a class="btn" href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="소개">
+      <div class="card">
+        <h2>흔적, 부재, 곰팡이</h2>
+        <p>곰팡이라는 소재를 통해 시간의 흐름과 존재의 빈자리를 탐구합니다. 보통은 배제되는 곰팡이를 위로의 존재로 바라보며, 대형 가구/조형 작업으로 확장합니다. 공간과 사람 사이의 새로운 공존을 제안합니다.</p>
+      </div>
+      <div class="card">
+        <h2>필터</h2>
+        <div class="filters" role="group" aria-label="작품 필터">
+          <button class="chip" data-filter="all" aria-pressed="true">전체</button>
+          <button class="chip" data-filter="furniture">가구형</button>
+          <button class="chip" data-filter="lighting">조명</button>
+          <button class="chip" data-filter="sculpture">조형</button>
+          <button class="chip" data-filter="2025">2025</button>
+          <button class="chip" data-filter="2024">2024</button>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="갤러리">
+      <div id="grid" class="grid" role="list"></div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div style="max-width:1200px;margin:0 auto;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <small>© <span id="year"></span> Byun Jiwon. All rights reserved.</small>
+      <div>
+        <a class="chip" href="mailto:hello@example.com" aria-label="이메일 보내기">메일</a>
+        <a class="chip" href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="frame">
+    <header>
+      <div class="lb-top">
+        <div class="brand"><span class="dot" aria-hidden="true"></span><div class="lb-title" id="lbTitle">작품 제목</div></div>
+        <div class="spacer"></div>
+        <button class="btn" id="closeLb" aria-label="닫기">닫기</button>
+      </div>
+    </header>
+    <div class="lb-body">
+      <div class="lb-media"><img id="lbImg" alt="작품 확대 이미지" /></div>
+      <aside class="lb-aside">
+        <h3>작품 정보</h3>
+        <p id="lbMeta"></p>
+        <h3>설명</h3>
+        <p id="lbDesc"></p>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- About Modal (visually uses lightbox) -->
+<div id="about" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="frame">
+    <header>
+      <div class="lb-top">
+        <div class="brand"><span class="dot" aria-hidden="true"></span><div class="lb-title">About</div></div>
+        <div class="spacer"></div>
+        <button class="btn" id="closeAbout" aria-label="닫기">닫기</button>
+      </div>
+    </header>
+    <div class="lb-body" style="grid-template-columns:1fr">
+      <div class="lb-aside" style="border-left:none">
+        <h3>변지원 | Byun Jiwon</h3>
+        <p>곰팡이의 생장과 흔적을 조형 언어로 번역하여, 부재의 감정과 시간의 층위를 가구/조명/조형물로 구현합니다. 공간과 사람 사이의 숨은 감정을 드러내는 설치를 지향합니다.</p>
+        <p><strong>이메일</strong> hello@example.com &nbsp;·&nbsp; <strong>인스타그램</strong> @your_id</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---- Sample data (이미지와 메타데이터) ----
+  const ITEMS = [
+    {id:1, title:"더미 더미 01", year:2024, type:"sculpture", material:"도자, 혼합재료", size:"120×80×60cm", cover:"https://picsum.photos/id/1011/800/600", desc:"구석으로 밀려난 감정의 덩어리를 형상화."},
+    {id:2, title:"Mold Light A", year:2025, type:"lighting", material:"도자, G8 소켓, LED", size:"Ø18×H24cm", cover:"https://picsum.photos/id/1015/800/600", desc:"곰팡이의 포자처럼 번지는 빛."},
+    {id:3, title:"Trace of Absence", year:2025, type:"furniture", material:"도자, 목재", size:"W90×D40×H45cm", cover:"https://picsum.photos/id/1025/800/600", desc:"부재가 남긴 흔적을 가구 스케일로 번역."},
+    {id:4, title:"Spore Growth", year:2024, type:"sculpture", material:"도자, 스테인리스", size:"150×70×70cm", cover:"https://picsum.photos/id/1003/800/600", desc:"포자가 위로 자라나 공간을 점유하는 장면."},
+    {id:5, title:"Soft Table (mold)", year:2023, type:"furniture", material:"도자, 강철", size:"W110×D60×H35cm", cover:"https://picsum.photos/id/1035/800/600", desc:"부드러운 달 조각 같은 곡률의 모듈."},
+    {id:6, title:"Letters I Never Sent", year:2025, type:"sculpture", material:"도자, 종이, 혼합", size:"가변 설치", cover:"https://picsum.photos/id/1040/800/600", desc:"상자 속 잘린 편지—남겨진 감정의 잔재."},
+    {id:7, title:"Mold Light B", year:2024, type:"lighting", material:"도자, G8 소켓, LED", size:"Ø16×H22cm", cover:"https://picsum.photos/id/1016/800/600", desc:"표면에 피어난 균사의 결을 빛으로."},
+    {id:8, title:"Corner Growth", year:2025, type:"sculpture", material:"도자", size:"80×50×40cm", cover:"https://picsum.photos/id/1020/800/600", desc:"구석에서 은밀히 시작되는 생장."},
+    {id:9, title:"Mold Stool Module", year:2025, type:"furniture", material:"도자", size:"W40×D32×H36cm", cover:"https://picsum.photos/id/1067/800/600", desc:"이음새 틈 없이 이어지는 모듈 스툴."}
+  ];
+
+  const grid = document.getElementById('grid');
+  const year = document.getElementById('year');
+  year.textContent = new Date().getFullYear();
+
+  function render(items){
+    grid.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    items.forEach(item=>{
+      const li = document.createElement('article');
+      li.className = 'item';
+      li.setAttribute('role','listitem');
+      li.dataset.type = item.type;
+      li.dataset.year = item.year;
+      li.innerHTML = `
+        <figure>
+          <img loading="lazy" src="${item.cover}" alt="${item.title} 표지 이미지" />
+          <span class="badge">${item.year} · ${label(item.type)}</span>
+          <button class="fav" aria-label="좋아요" title="좋아요">❤</button>
+        </figure>
+        <div class="meta">
+          <div class="title">${item.title}</div>
+          <div class="desc">${item.material} · ${item.size}</div>
+        </div>
+      `;
+      li.addEventListener('click', (e)=>{
+        // avoid when clicking fav
+        if(e.target.closest('.fav')){ e.stopPropagation(); e.preventDefault(); e.target.classList.toggle('on'); return; }
+        openLightbox(item);
+      });
+      frag.appendChild(li);
+    });
+    grid.appendChild(frag);
+  }
+
+  function label(type){
+    return ({furniture:'가구', lighting:'조명', sculpture:'조형'}[type]||type)
+  }
+
+  function filterBy(key){
+    if(key==='all') return render(ITEMS);
+    const out = ITEMS.filter(it=> String(it.year)===key || it.type===key);
+    render(out);
+  }
+
+  // initial render
+  render(ITEMS);
+
+  // filters
+  document.querySelectorAll('.chip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed','false'));
+      ch.setAttribute('aria-pressed','true');
+      filterBy(ch.dataset.filter);
+    });
+  });
+
+  // search
+  const q = document.getElementById('q');
+  q.addEventListener('input',()=>{
+    const s = q.value.trim().toLowerCase();
+    const out = ITEMS.filter(it=>
+      it.title.toLowerCase().includes(s) ||
+      it.material.toLowerCase().includes(s) ||
+      (it.desc||'').toLowerCase().includes(s)
+    );
+    render(out);
+  });
+
+  // lightbox
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbMeta = document.getElementById('lbMeta');
+  const lbDesc = document.getElementById('lbDesc');
+  const closeLb = document.getElementById('closeLb');
+
+  function openLightbox(item){
+    lbImg.src = item.cover;
+    lbTitle.textContent = item.title;
+    lbMeta.textContent = `${item.year} · ${label(item.type)} · ${item.material} · ${item.size}`;
+    lbDesc.textContent = item.desc || '';
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeLightbox(){
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+  closeLb.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLightbox(); });
+  window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLightbox(); });
+
+  // About modal share styles
+  const about = document.getElementById('about');
+  const aboutBtn = document.getElementById('aboutBtn');
+  const closeAbout = document.getElementById('closeAbout');
+  aboutBtn.addEventListener('click',()=>{
+    const expanded = aboutBtn.getAttribute('aria-expanded')==='true';
+    aboutBtn.setAttribute('aria-expanded', String(!expanded));
+    about.classList.add('open'); about.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  });
+  closeAbout.addEventListener('click',()=>{ about.classList.remove('open'); about.setAttribute('aria-hidden','true'); document.body.style.overflow=''; aboutBtn.setAttribute('aria-expanded','false'); });
+
+</script>
 </body>
 </html>
