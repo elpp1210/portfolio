@@ -2,169 +2,310 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>변지원 Portfolio</title>
-  <!-- S-Core Dream 폰트 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_s_core_dream@1.0/S-CoreDream.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JIWON BYUN — Portfolio</title>
+  <meta name="description" content="곰팡이의 시간성과 부재를 탐구하는 작가 변지원 포트폴리오" />
+  <!-- S-Core Dream (에스코어 드림) 웹폰트: 200/400 -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/SCoreDream.css" />
   <style>
-    body {
-      margin: 0;
-      font-family: 'S-CoreDream', sans-serif;
-      font-weight: 200;
-      background-color: #fff;
-      color: #111;
-      text-align: center;
+    :root{
+      --bg:#ffffff; --card:#ffffff; --text:#111213; --muted:#666b74; --line:#e9eaee; --ring:rgba(0,0,0,.06);
+      --shadow:0 18px 50px rgba(0,0,0,.06);
     }
-    header {
-      padding: 20px;
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+      font-family:'S-CoreDream',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.1px}
+    body{font-weight:200}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button{font-family:inherit}
+
+    /* Layout */
+    .wrap{display:grid;grid-template-rows:auto 1fr auto;min-height:100dvh}
+    header{position:sticky;top:0;background:rgba(255,255,255,.82);backdrop-filter:saturate(140%) blur(8px);
+      border-bottom:1px solid var(--line);z-index:20}
+    .nav{max-width:1200px;margin:0 auto;display:flex;gap:12px;align-items:center;padding:16px 20px}
+    .spacer{flex:1}
+
+    /* Controls */
+    .btn,.chip{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--text);
+      padding:10px 14px;border-radius:999px;font-size:13px;line-height:1;display:inline-flex;gap:8px;align-items:center;
+      cursor:pointer;transition:.16s ease;font-weight:200}
+    .btn:hover,.chip:hover{border-color:#d6d8df;transform:translateY(-1px)}
+    .chip[aria-pressed="true"], .btn[aria-pressed="true"]{border-color:#c9ccd5;box-shadow:0 0 0 4px var(--ring)}
+    .brand-link{font-weight:400;letter-spacing:.2px;text-transform:uppercase;font-size:14px}
+
+    /* Hero */
+    main{max-width:1200px;margin:0 auto;padding:72px 20px 96px}
+    .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;margin:12px 0 40px}
+    .hero p{margin:0;color:var(--muted);font-size:16px;line-height:1.9;max-width:820px}
+
+    /* Filters: 2줄(연도/종류) + 멀티선택 + 중앙정렬 + 여백 크게 */
+    .filters{display:flex;flex-direction:column;align-items:center;gap:14px;margin:28px 0 56px}
+    .filters-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+
+    /* Gallery - 카드형, 넉넉한 여백 */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+    .item{grid-column:span 4;position:relative;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line);
+      box-shadow:var(--shadow);opacity:0;transform:translateY(4px)}
+    .item.show{opacity:1;transform:none;transition:opacity .28s ease, transform .28s ease}
+    .item figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden;display:grid}
+    .thumb{display:none;place-items:center;background:#f2f3f7;color:var(--muted);font-size:12px}
+    .item img{width:100%;height:100%;object-fit:cover}
+    .badge{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.92);padding:6px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px}
+    .meta{display:flex;flex-direction:column;gap:8px;padding:16px}
+    .title{font-size:15px;font-weight:400}
+    .desc{font-size:13px;color:var(--muted)}
+
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:28px;z-index:50}
+    .lightbox.open{display:flex}
+    .lightbox .frame{max-width:min(1100px,92vw);max-height:86vh;border-radius:20px;overflow:hidden;background:#fff;border:1px solid var(--line);
+      display:grid;grid-template-rows:auto 1fr;color:var(--text)}
+    .lightbox header{position:relative;background:#fff;border-bottom:1px solid var(--line)}
+    .lb-top{display:flex;align-items:center;gap:10px;padding:12px 16px}
+    .lb-title{font-weight:400}
+    .lb-body{display:grid;grid-template-columns:1fr 400px}
+    .lb-media{background:#000;display:grid;place-items:center}
+    .lb-media img{max-width:100%;max-height:76vh;object-fit:contain}
+    .lb-aside{border-left:1px solid var(--line);padding:16px 16px 20px;overflow:auto}
+    .lb-aside h3{margin:0 0 10px;font-size:14px;font-weight:400}
+    .lb-aside p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.8}
+
+    /* Footer */
+    footer{border-top:1px solid var(--line);padding:20px;color:var(--muted)}
+    .footer-bar{max-width:1200px;margin:0 auto;display:flex;gap:12px;align-items:center}
+    .footer-left{flex:1;text-align:left;font-size:12px}
+    .footer-right{display:flex;gap:8px}
+
+    /* Responsive */
+    @media (max-width: 1024px){
+      .grid{gap:20px}
+      .item{grid-column:span 6}
+      .lb-body{grid-template-columns:1fr}
     }
-    .hero {
-      padding: 60px 20px 40px;
-    }
-    .hero h1 {
-      font-weight: 400;
-      font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 1.1em;
-      max-width: 700px;
-      margin: 0 auto;
-      line-height: 1.8;
-    }
-    .filters {
-      margin: 40px 0;
-    }
-    .filters-row {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .chip {
-      border: 1px solid #ccc;
-      background: none;
-      padding: 8px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.95em;
-      transition: all 0.2s ease;
-    }
-    .chip.active {
-      background-color: #111;
-      color: #fff;
-      border-color: #111;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 0 20px;
-    }
-    .gallery img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 8px;
-    }
-    footer {
-      margin-top: 60px;
-      padding: 20px;
-      font-size: 0.9em;
-      color: #555;
-    }
-    footer a {
-      color: inherit;
-      text-decoration: none;
-    }
-    .btn-cv {
-      margin-top: 20px;
-      display: inline-block;
-      padding: 10px 20px;
-      border: 1px solid #111;
-      border-radius: 20px;
-      text-decoration: none;
-      color: #111;
-      transition: all 0.2s ease;
-    }
-    .btn-cv:hover {
-      background: #111;
-      color: #fff;
+    @media (max-width: 640px){
+      .item{grid-column:span 12}
+      .btn,.chip{padding:9px 12px;font-size:12px}
     }
   </style>
 </head>
 <body>
+<div class="wrap">
+  <!-- Header -->
+  <header>
+    <nav class="nav" aria-label="주요">
+      <div class="brand"><a class="brand-link" href="./" aria-label="Home">JIWON BYUN</a></div>
+      <div class="spacer"></div>
+      <div class="controls">
+        <button class="btn" id="aboutBtn" aria-controls="about" aria-expanded="false">About</button>
+        <a class="btn" id="cvBtn" href="cv.html">CV</a>
+        <a class="btn" href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
 
-  <header></header>
+  <main>
+    <!-- Hero: 설명만 표시 -->
+    <section class="hero" aria-label="소개">
+      <p>곰팡이를 통해 시간의 흐름과 존재의 빈자리를 탐구합니다. 보이지 않는 감정과 소외된 존재들을 작업 속에 담아냅니다.</p>
+    </section>
 
-  <section class="hero">
-    <h1>변지원</h1>
-    <p>곰팡이를 통해 시간의 흐름과 존재의 빈자리를 탐구합니다.<br>
-       보이지 않는 감정과 소외된 존재들을 작업 속에 담아냅니다.</p>
-    <a href="cv.html" class="btn-cv">CV</a>
-  </section>
+    <!-- Filters: 2줄 + 멀티선택 + 중앙 -->
+    <section aria-label="필터">
+      <div class="filters" role="group" aria-label="작품 필터">
+        <div class="filters-row year-filters" aria-label="연도 필터">
+          <button class="chip" data-action="reset" aria-pressed="true">전체</button>
+          <button class="chip" data-filter-type="year" data-value="2022" aria-pressed="false">2022</button>
+          <button class="chip" data-filter-type="year" data-value="2023" aria-pressed="false">2023</button>
+          <button class="chip" data-filter-type="year" data-value="2024" aria-pressed="false">2024</button>
+          <button class="chip" data-filter-type="year" data-value="2025" aria-pressed="false">2025</button>
+        </div>
+        <div class="filters-row type-filters" aria-label="종류 필터">
+          <button class="chip" data-filter-type="type" data-value="furniture" aria-pressed="false">가구</button>
+          <button class="chip" data-filter-type="type" data-value="sculpture" aria-pressed="false">조형</button>
+          <button class="chip" data-filter-type="type" data-value="lighting" aria-pressed="false">조명</button>
+        </div>
+      </div>
+    </section>
 
-  <!-- 필터 -->
-  <section class="filters">
-    <!-- 연도 -->
-    <div class="filters-row" id="yearFilters">
-      <button class="chip" data-filter-type="year" data-value="2022">2022</button>
-      <button class="chip" data-filter-type="year" data-value="2023">2023</button>
-      <button class="chip" data-filter-type="year" data-value="2024">2024</button>
-      <button class="chip" data-filter-type="year" data-value="2025">2025</button>
+    <!-- Gallery -->
+    <section aria-label="갤러리">
+      <div id="grid" class="grid" role="list"></div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="footer-bar">
+      <div class="footer-left">© 2025 byunjiwon. All rights reserved.</div>
+      <div class="footer-right">
+        <a class="btn" href="https://www.instagram.com/ji.jiwon" target="_blank" rel="noreferrer">Instagram</a>
+        <a class="btn" href="mailto:jiwonbyun97@gmail.com">Email</a>
+      </div>
     </div>
-    <!-- 종류 -->
-    <div class="filters-row" id="typeFilters">
-      <button class="chip" data-filter-type="type" data-value="furniture">가구</button>
-      <button class="chip" data-filter-type="type" data-value="sculpture">조형</button>
-      <button class="chip" data-filter-type="type" data-value="lighting">조명</button>
-    </div>
-  </section>
-
-  <!-- 갤러리 -->
-  <section class="gallery" id="gallery">
-    <img src="https://via.placeholder.com/600x400" alt="작품1" data-year="2022" data-type="sculpture">
-    <img src="https://via.placeholder.com/600x400" alt="작품2" data-year="2023" data-type="furniture">
-    <img src="https://via.placeholder.com/600x400" alt="작품3" data-year="2024" data-type="lighting">
-    <img src="https://via.placeholder.com/600x400" alt="작품4" data-year="2025" data-type="sculpture">
-  </section>
-
-  <!-- 하단 -->
-  <footer>
-    Instagram: <a href="https://www.instagram.com/ji.jiwon" target="_blank">@ji.jiwon</a> <br>
-    Email: <a href="mailto:jiwonbyun97@gmail.com">jiwonbyun97@gmail.com</a>
   </footer>
+</div>
 
-  <script>
-    const chips = document.querySelectorAll('.chip');
-    let activeYears = new Set();
-    let activeTypes = new Set();
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="frame">
+    <header>
+      <div class="lb-top">
+        <div class="brand"><div class="lb-title" id="lbTitle">작품 제목</div></div>
+        <div class="spacer"></div>
+        <button class="btn" id="closeLb" aria-label="닫기">닫기</button>
+      </div>
+    </header>
+    <div class="lb-body">
+      <div class="lb-media"><img id="lbImg" alt="작품 확대 이미지" /></div>
+      <aside class="lb-aside">
+        <h3>작품 정보</h3>
+        <p id="lbMeta"></p>
+        <h3>설명</h3>
+        <p id="lbDesc"></p>
+      </aside>
+    </div>
+  </div>
+</div>
 
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        chip.classList.toggle('active');
-        const filterType = chip.dataset.filterType;
-        const value = chip.dataset.value;
+<!-- About Modal -->
+<div id="about" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="frame">
+    <header>
+      <div class="lb-top">
+        <div class="brand"><div class="lb-title">About</div></div>
+        <div class="spacer"></div>
+        <button class="btn" id="closeAbout" aria-label="닫기">닫기</button>
+      </div>
+    </header>
+    <div class="lb-body" style="grid-template-columns:1fr">
+      <div class="lb-aside" style="border-left:none">
+        <h3>변지원 | Byun Jiwon</h3>
+        <p>곰팡이의 생장과 흔적을 조형 언어로 번역하여, 부재의 감정과 시간의 층위를 가구/조명/조형물로 구현합니다. 공간과 사람 사이의 숨은 감정을 드러내는 설치를 지향합니다.</p>
+        <p><strong>이메일</strong> jiwonbyun97@gmail.com &nbsp;·&nbsp; <strong>인스타그램</strong> @ji.jiwon</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-        if (filterType === 'year') {
-          activeYears.has(value) ? activeYears.delete(value) : activeYears.add(value);
-        } else if (filterType === 'type') {
-          activeTypes.has(value) ? activeTypes.delete(value) : activeTypes.add(value);
-        }
-        filterGallery();
-      });
+<script>
+  // ---- 샘플 데이터 (이미지 URL은 나중에 교체 가능) ----
+  const ITEMS = [
+    {id:1, title:"Mold Light A", year:2025, type:"lighting", material:"도자, G8 소켓, LED", size:"Ø18×H24cm", cover:"https://picsum.photos/id/1015/800/600", desc:"곰팡이의 포자처럼 번지는 빛."},
+    {id:2, title:"Trace of Absence", year:2025, type:"furniture", material:"도자, 목재", size:"W90×D40×H45cm", cover:"https://picsum.photos/id/1025/800/600", desc:"부재가 남긴 흔적을 가구 스케일로 번역."},
+    {id:3, title:"Spore Growth", year:2024, type:"sculpture", material:"도자, 스테인리스", size:"150×70×70cm", cover:"https://picsum.photos/id/1003/800/600", desc:"포자가 위로 자라나 공간을 점유하는 장면."},
+    {id:4, title:"Soft Table (mold)", year:2023, type:"furniture", material:"도자, 강철", size:"W110×D60×H35cm", cover:"https://picsum.photos/id/1035/800/600", desc:"부드러운 달 조각 같은 곡률의 모듈."},
+    {id:5, title:"Letters I Never Sent", year:2025, type:"sculpture", material:"도자, 종이, 혼합", size:"가변 설치", cover:"https://picsum.photos/id/1040/800/600", desc:"상자 속 잘린 편지—남겨진 감정의 잔재."},
+    {id:6, title:"Mold Light B", year:2024, type:"lighting", material:"도자, G8 소켓, LED", size:"Ø16×H22cm", cover:"https://picsum.photos/id/1016/800/600", desc:"표면에 피어난 균사의 결을 빛으로."},
+    {id:7, title:"Corner Growth", year:2025, type:"sculpture", material:"도자", size:"80×50×40cm", cover:"https://picsum.photos/id/1020/800/600", desc:"구석에서 은밀히 시작되는 생장."},
+    {id:8, title:"Mold Stool Module", year:2025, type:"furniture", material:"도자", size:"W40×D32×H36cm", cover:"https://picsum.photos/id/1067/800/600", desc:"이음새 틈 없이 이어지는 모듈 스툴."},
+    {id:9, title:"Early Mold Study", year:2022, type:"sculpture", material:"도자", size:"35×28×25cm", cover:"https://picsum.photos/id/1050/800/600", desc:"초기 균사 형태 연구."}
+  ];
+
+  const grid = document.getElementById('grid');
+  function label(t){ return ({furniture:'가구',lighting:'조명',sculpture:'조형'}[t]||t); }
+
+  function render(items){
+    grid.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    items.forEach((item,i)=>{
+      const li = document.createElement('article');
+      li.className='item'; li.setAttribute('role','listitem');
+
+      const fig=document.createElement('figure');
+      const ph=document.createElement('div'); ph.className='thumb'; ph.textContent='이미지 로딩 중...';
+      const img=document.createElement('img'); img.loading='lazy'; img.alt=`${item.title} 표지 이미지`; img.src=item.cover; img.onerror=()=>{ph.style.display='grid'; img.style.display='none';};
+      fig.appendChild(ph); fig.appendChild(img);
+
+      const badge=document.createElement('span'); badge.className='badge'; badge.textContent=`${item.year} · ${label(item.type)}`; fig.appendChild(badge);
+      li.appendChild(fig);
+
+      const meta=document.createElement('div'); meta.className='meta';
+      meta.innerHTML=`<div class="title">${item.title}</div><div class="desc">${item.material} · ${item.size}</div>`;
+      li.appendChild(meta);
+
+      li.addEventListener('click',()=> openLightbox(item));
+
+      frag.appendChild(li); setTimeout(()=> li.classList.add('show'), 30 + i*25);
     });
+    grid.appendChild(frag);
+  }
 
-    function filterGallery() {
-      const images = document.querySelectorAll('#gallery img');
-      images.forEach(img => {
-        const yearMatch = activeYears.size === 0 || activeYears.has(img.dataset.year);
-        const typeMatch = activeTypes.size === 0 || activeTypes.has(img.dataset.type);
-        img.style.display = (yearMatch && typeMatch) ? '' : 'none';
+  // 멀티선택 필터 상태
+  let activeYears = new Set();
+  let activeTypes = new Set();
+
+  function applyFilters(){
+    const out = ITEMS.filter(it =>
+      (activeYears.size===0 || activeYears.has(String(it.year))) &&
+      (activeTypes.size===0 || activeTypes.has(it.type))
+    );
+    render(out);
+    const allBtn=document.querySelector('.chip[data-action="reset"]');
+    if(allBtn) allBtn.setAttribute('aria-pressed', (activeYears.size===0 && activeTypes.size===0)?'true':'false');
+  }
+
+  // 초기 렌더
+  render(ITEMS);
+
+  // 필터 버튼 핸들러
+  document.querySelectorAll('.chip').forEach(btn=>{
+    const action = btn.dataset.action;
+    if(action==='reset'){
+      btn.addEventListener('click',()=>{
+        activeYears.clear(); activeTypes.clear();
+        document.querySelectorAll('.chip[data-filter-type]').forEach(c=>c.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        applyFilters();
       });
+      return;
     }
-  </script>
+    btn.addEventListener('click',()=>{
+      const type = btn.dataset.filterType; // year | type
+      const val = btn.dataset.value;
+      const pressed = btn.getAttribute('aria-pressed')==='true';
+      btn.setAttribute('aria-pressed', pressed?'false':'true');
+      if(type==='year'){
+        if(activeYears.has(val)) activeYears.delete(val); else activeYears.add(val);
+      } else if(type==='type'){
+        if(activeTypes.has(val)) activeTypes.delete(val); else activeTypes.add(val);
+      }
+      applyFilters();
+    });
+  });
 
+  // 라이트박스
+  const lb=document.getElementById('lightbox');
+  const lbImg=document.getElementById('lbImg');
+  const lbTitle=document.getElementById('lbTitle');
+  const lbMeta=document.getElementById('lbMeta');
+  const lbDesc=document.getElementById('lbDesc');
+  const closeLb=document.getElementById('closeLb');
+
+  function openLightbox(item){
+    lbImg.src=item.cover; lbTitle.textContent=item.title;
+    lbMeta.textContent=`${item.year} · ${label(item.type)} · ${item.material} · ${item.size}`;
+    lbDesc.textContent=item.desc||'';
+    lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+  }
+  function closeLightbox(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  closeLb.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLightbox(); });
+  window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLightbox(); });
+
+  // About 모달
+  const about=document.getElementById('about');
+  const aboutBtn=document.getElementById('aboutBtn');
+  const closeAbout=document.getElementById('closeAbout');
+  aboutBtn.addEventListener('click',()=>{
+    aboutBtn.setAttribute('aria-expanded','true');
+    about.classList.add('open'); about.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+  });
+  closeAbout.addEventListener('click',()=>{
+    about.classList.remove('open'); about.setAttribute('aria-hidden','true'); document.body.style.overflow=''; aboutBtn.setAttribute('aria-expanded','false');
+  });
+</script>
 </body>
 </html>
