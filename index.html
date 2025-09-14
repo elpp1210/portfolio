@@ -240,7 +240,11 @@
     type: "lighting", // furniture | sculpture | lighting
     material: "도자, 조명 부품",
     size: "가변 설치",
-    cover: "https://github.com/user-attachments/assets/e075a9a9-b371-4df8-8d32-5b9d3e85b196",
+    cover: "https://github.com/user-attachments/assets/67ebca73-8745-431f-b871-af085b86cda9",
+    images:[
+      "https://github.com/user-attachments/assets/67ebca73-8745-431f-b871-af085b86cda9",
+      "https://github.com/user-attachments/assets/e075a9a9-b371-4df8-8d32-5b9d3e85b196"
+    ],
     desc: "주변에 존재하는 익숙한 사물들을 곰팡이가 자라나며 형태를 따라한 듯한 모습으로 재구성하고 있다. 이 조명 역시 그 시리즈의 연장선에 있는 작업으로, 포자의 모습을 형상화했다."
   },
       {
@@ -314,7 +318,9 @@
 ];
 
   // id 자동 생성(없어도 됨) + 순서는 배열 순서대로 유지
-  const DATA = ITEMS.map((it, idx) => ({ id: (it.id == null ? (Date.now() + '-' + idx) : it.id), ...it }));
+  const DATA = ITEMS
+  .map((it, idx) => ({ id: (it.id == null ? (Date.now() + '-' + idx) : it.id), ...it }))
+  .sort((a, b) => b.year - a.year);
 
   // 필터 상태
   var activeYears = new Set();
