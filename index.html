@@ -66,21 +66,24 @@
     .lightbox header{position:relative;background:#fff;border-bottom:1px solid var(--line)}
     .lb-top{display:flex;align-items:center;gap:10px;padding:12px 16px}
     .lb-title{font-weight:400}
-    .lb-body{display:grid;grid-template-columns:1fr 400px}
-    ..lb-media{
+    .lb-body{
+  display:grid;
+  grid-template-columns:1fr 400px;  /* 데스크탑: 이미지 | 설명 */
+  overflow:auto;                     /* ← 여기! 스크롤을 부모에 */
+}
+    .lb-media{
   background:#000;
   display:flex;
-  justify-content:center;   /* 가로 가운데 */
-  align-items:flex-start;   /* 위에서 시작 (세로 스크롤) */
-  overflow:auto;            /* 스크롤 허용 */
-  max-height:85vh;          /* 화면 안에서 높이 제한 */
+  justify-content:center;
+  align-items:flex-start;
+  /* overflow:auto;  <-- 지워주세요! */
   padding:0;
 }
 .lb-media img{
   display:block;
-  max-width:100%;           /* 화면 가로에 맞춤 */
-  height:auto;              /* 세로는 비율 유지하면서 늘어남 */
-  object-fit:contain;       /* 가로사진도 안정적으로 */
+  max-width:100%;
+  height:auto;
+  object-fit:contain;
 }
     .lb-aside{border-left:1px solid var(--line);padding:16px 16px 20px;overflow:auto}
     .lb-aside h3{margin:0 0 10px;font-size:14px;font-weight:400}
@@ -102,6 +105,10 @@
       .item{grid-column:span 12}
       .btn,.chip{padding:9px 12px;font-size:12px}
     }
+    @media (max-width: 1024px){
+  .lb-body{ grid-template-columns:1fr; }
+  .lb-aside{ border-left:none; border-top:1px solid var(--line); }
+}
   </style>
 </head>
 <body>
