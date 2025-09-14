@@ -5,17 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JIWON BYUN — Portfolio</title>
   <meta name="description" content="곰팡이의 시간성과 부재를 탐구하는 작가 변지원 포트폴리오" />
-  <!-- S-Core Dream (에스코어 드림) 웹폰트: 200/400 -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/SCoreDream.css" />
+  <!-- Image perf hints -->
+  <link rel="preconnect" href="https://github.com">
+  <link rel="dns-prefetch" href="https://github.com">
   <style>
-    :root{
-      --bg:#ffffff; --card:#ffffff; --text:#111213; --muted:#666b74; --line:#e9eaee; --ring:rgba(0,0,0,.06);
-      --shadow:0 18px 50px rgba(0,0,0,.06);
-    }
+    :root{ --bg:#ffffff; --card:#ffffff; --text:#111213; --muted:#666b74; --line:#e9eaee; --ring:rgba(0,0,0,.06); --shadow:0 18px 50px rgba(0,0,0,.06); }
     *{box-sizing:border-box}
-    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
-      font-family:'S-CoreDream',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.1px}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'S-CoreDream',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.1px}
     body{font-weight:200}
     a{color:inherit;text-decoration:none}
     img{max-width:100%;display:block}
@@ -23,11 +22,9 @@
 
     /* Layout */
     .wrap{display:grid;grid-template-rows:auto 1fr auto;min-height:100dvh}
-    header{position:sticky;top:0;background:rgba(255,255,255,.82);backdrop-filter:saturate(140%) blur(8px);
-      border-bottom:1px solid var(--line);z-index:30}
+    header{position:sticky;top:0;background:rgba(255,255,255,.82);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--line);z-index:30}
     .nav{max-width:1200px;margin:0 auto;display:flex;gap:12px;align-items:center;padding:16px 20px}
     .spacer{flex:1}
-
     .brand-link{font-weight:400;letter-spacing:.2px;text-transform:uppercase;font-size:14px}
 
     /* Hero */
@@ -39,20 +36,17 @@
     .filters{display:flex;flex-direction:column;align-items:center;gap:14px;margin:28px 0 56px}
     .filters-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 
-    .btn,.chip{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--text);
-      padding:10px 14px;border-radius:999px;font-size:13px;line-height:1;display:inline-flex;gap:8px;align-items:center;
-      cursor:pointer;transition:.16s ease;font-weight:200}
+    .btn,.chip{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--text);padding:10px 14px;border-radius:999px;font-size:13px;line-height:1;display:inline-flex;gap:8px;align-items:center;cursor:pointer;transition:.16s ease;font-weight:200}
     .btn:hover,.chip:hover{border-color:#d6d8df;transform:translateY(-1px)}
     .chip[aria-pressed="true"], .btn[aria-pressed="true"]{border-color:#c9ccd5;box-shadow:0 0 0 4px var(--ring)}
 
-    /* Gallery - 카드형 */
+    /* Gallery */
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
-    .item{grid-column:span 4;position:relative;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line);
-      box-shadow:var(--shadow);opacity:0;transform:translateY(4px)}
+    .item{grid-column:span 4;position:relative;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);opacity:0;transform:translateY(4px);content-visibility:auto;contain-intrinsic-size:300px 225px}
     .item.show{opacity:1;transform:none;transition:opacity .28s ease, transform .28s ease}
     .item figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden;display:flex}
-    .thumb{display:none;place-items:center;background:#f2f3f7;color:var(--muted);font-size:12px}
-    .item img{width:100%;height:100%;object-fit:cover;object-position:center;}
+    .thumb{display:grid;place-items:center;background:#f2f3f7;color:var(--muted);font-size:12px}
+    .item img{width:100%;height:100%;object-fit:cover;object-position:center}
     .badge{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.92);padding:6px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px}
     .meta{display:flex;flex-direction:column;gap:8px;padding:16px}
     .title{font-size:15px;font-weight:400}
@@ -61,8 +55,7 @@
     /* Lightbox */
     .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:28px;z-index:50}
     .lightbox.open{display:flex}
-    .lightbox .frame{max-width:min(1100px,92vw);max-height:86vh;border-radius:20px;overflow:hidden;background:#fff;border:1px solid var(--line);
-      display:grid;grid-template-rows:auto 1fr;color:var(--text)}
+    .lightbox .frame{max-width:min(1100px,92vw);max-height:86vh;border-radius:20px;overflow:hidden;background:#fff;border:1px solid var(--line);display:grid;grid-template-rows:auto 1fr;color:var(--text)}
     .lightbox header{position:relative;background:#fff;border-bottom:1px solid var(--line)}
     .lb-top{display:flex;align-items:center;gap:10px;padding:12px 16px}
     .lb-title{font-weight:400}
@@ -79,35 +72,23 @@
     .footer-left{flex:1;text-align:left;font-size:12px}
     .footer-right{display:flex;gap:8px}
 
-    /* ───────────── Drawer (우측 슬라이드 메뉴) ───────────── */
+    /* Drawer (Right) */
     .menu-btn{appearance:none;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--text)}
     .menu-btn svg{width:18px;height:18px;display:block;stroke:var(--text)}
-
     .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(1px);opacity:0;pointer-events:none;transition:.2s ease;z-index:40}
     .drawer-overlay.open{opacity:1;pointer-events:auto}
-
-    .drawer{position:fixed;inset:0 0 0 auto;width:min(280px,86vw);background:#fff;border-left:1px solid var(--line);
-      transform:translateX(100%);transition:transform .24s ease;z-index:41;display:flex;flex-direction:column}
+    .drawer{position:fixed;inset:0 0 0 auto;width:min(280px,86vw);background:#fff;border-left:1px solid var(--line);transform:translateX(100%);transition:transform .24s ease;z-index:41;display:flex;flex-direction:column}
     .drawer.open{transform:translateX(0)}
     .drawer header{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line)}
     .drawer .menu-list{padding:14px}
     .drawer .menu-list a,.drawer .menu-list button{width:100%;text-align:left;margin-bottom:10px}
-
-    /* 기존 헤더의 버튼 그룹 숨김 (햄버거만 보이게) */
     .controls{display:none}
 
     /* Responsive */
-    @media (max-width: 1024px){
-      .grid{gap:20px}
-      .item{grid-column:span 6}
-      .lb-body{grid-template-columns:1fr}
-    }
-    @media (max-width: 640px){
-      .item{grid-column:span 12}
-      .btn,.chip{padding:9px 12px;font-size:12px}
-    }
+    @media (max-width: 1024px){ .grid{gap:20px} .item{grid-column:span 6} .lb-body{grid-template-columns:1fr} }
+    @media (max-width: 640px){ .item{grid-column:span 12} .btn,.chip{padding:9px 12px;font-size:12px} }
 
-    /* Lightbox mobile rules */
+    /* Lightbox mobile */
     @media (max-width: 640px){
       .lightbox{align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
       .lightbox .frame{width:100%;max-width:680px;border-radius:20px;overflow:hidden;background:#fff;height:auto;max-height:none}
@@ -119,41 +100,28 @@
   </style>
 </head>
 <body>
-</body>
-</html>
 <div class="wrap">
   <!-- Header -->
   <header>
     <nav class="nav" aria-label="주요">
       <div class="brand"><a class="brand-link" href="./" aria-label="Home">JIWON BYUN</a></div>
       <div class="spacer"></div>
-
-      <!-- 우측 상단 메뉴 버튼 (햄버거) -->
+      <!-- Menu (Hamburger) -->
       <button id="menuBtn" class="menu-btn" aria-label="메뉴 열기" aria-controls="drawer" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
-
-      <!-- (참고) 기존 상단 네비 버튼 그룹은 숨김 처리됨
-      <div class="controls">
-        <button class="btn" id="aboutBtn" aria-controls="about" aria-expanded="false">About</button>
-        <a class="btn" href="statement.html">Statement</a>
-        <a class="btn" id="cvBtn" href="cv.html">CV</a>
-        <a class="btn" href="#contact">Contact</a>
-      </div> -->
     </nav>
   </header>
   
   <main>
-    <!-- Hero: 설명만 표시 -->
+    <!-- Hero -->
     <section class="hero" aria-label="소개">
-      <br><br><br>
-      <p> 일반적으로 부정적으로 인식되는 곰팡이를 통해 시간과 부재, 감정의 잔재를 탐구한다. 곰팡이는 사람의 손길이 닿지 않는 곳에서 서서히 자라나며, 그 자체로 시간의 축적이자 사람의 흔적을 암시한다. 나는 이러한 곰팡이를 단순한 오염의 존재가 아닌 감정적 존재로 바라본다. 곰팡이의 유기적이고 번지는 특성을 가구나 조형물 형태로 구체화하며, 그것을 통해 보이지 않는 감정과 소외된 존재의 무게를 시각화한다. 각기 다른 형태로 표현된 곰팡이 형상은 감정과 잊혀진 기억들을 투영하는 장치로 기능한다.</p>
-      <br><br><br><br>
+      <p>일반적으로 부정적으로 인식되는 곰팡이를 통해 시간과 부재, 감정의 잔재를 탐구한다. 곰팡이는 사람의 손길이 닿지 않는 곳에서 서서히 자라나며, 그 자체로 시간의 축적이자 사람의 흔적을 암시한다. 나는 이러한 곰팡이를 단순한 오염의 존재가 아닌 감정적 존재로 바라본다. 곰팡이의 유기적이고 번지는 특성을 가구나 조형물 형태로 구체화하며, 그것을 통해 보이지 않는 감정과 소외된 존재의 무게를 시각화한다. 각기 다른 형태로 표현된 곰팡이 형상은 감정과 잊혀진 기억들을 투영하는 장치로 기능한다.</p>
     </section>
  
-    <!-- Filters: 2줄 + 멀티선택 + 중앙 -->
+    <!-- Filters -->
     <section aria-label="필터">
       <div class="filters" role="group" aria-label="작품 필터">
         <div class="filters-row year-filters" aria-label="연도 필터">
@@ -211,7 +179,7 @@
   </div>
 </div>
 
-<!-- About Modal (Drawer의 About 버튼과 연동) -->
+<!-- About Modal -->
 <div id="about" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="frame">
     <header>
@@ -231,7 +199,7 @@
   </div>
 </div>
 
-<!-- ───────────── Drawer markup ───────────── -->
+<!-- Drawer -->
 <div id="drawerOverlay" class="drawer-overlay" aria-hidden="true"></div>
 <aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="drawerTitle">
   <header>
@@ -248,7 +216,17 @@
 </aside>
 
 <script>
-  // ---- 작품 데이터 ----
+  // =====================================================
+  // 데이터 작성 팁
+  // - 새 작품을 "맨 앞에" 추가하고 싶으면 ITEMS 배열의 맨 위에 객체를 하나 붙여주세요.
+  // - id 번호는 더 이상 의미가 없습니다. (없어도 자동 부여)
+  //   → 순서는 배열에 적힌 순서대로 표시됩니다.
+  // =====================================================
+
+  const grid = document.getElementById('grid');
+  function label(t){ return ({furniture:'가구',lighting:'조명',sculpture:'조형'}[t]||t); }
+
+  // 원본 데이터 (여기에 새 작품을 맨 위에 추가하면 바로 첫 카드로 노출)
   const ITEMS = [
     { id:1, title:"더미더미", year:2025, type:"sculpture", material:"도자", size:"가변 설치",
       cover:"https://github.com/user-attachments/assets/562f76d3-ad76-4ed3-a2dd-8e386eb24704",
@@ -286,12 +264,50 @@
     }
   ];
 
-  const grid = document.getElementById('grid');
-  function label(t){ return ({furniture:'가구',lighting:'조명',sculpture:'조형'}[t]||t); }
+  // ====== 여기서부터는 코드가 id를 자동으로 만들어줍니다 (없어도 됨) ======
+  const DATA = ITEMS.map((it, idx) => ({
+    // id가 없으면 자동 생성 (페이지 로드 시점 기준 유니크 값)
+    id: (it.id == null ? (Date.now() + '-' + idx) : it.id),
+    ...it
+  }));
 
+  // 필터 상태
+  var activeYears = new Set();
+  var activeTypes = new Set();
+
+  function applyFilters(){
+    var out = DATA.filter(function(it){
+      var yOK = (activeYears.size===0 || activeYears.has(String(it.year)));
+      var tOK = (activeTypes.size===0 || activeTypes.has(it.type));
+      return yOK && tOK;
+    });
+    render(out);
+    var allBtn=document.querySelector('.chip[data-action="reset"]');
+    if(allBtn) allBtn.setAttribute('aria-pressed', (activeYears.size===0 && activeTypes.size===0)?'true':'false');
+  }
+
+  // ===== 이미지 지연 로딩 최적화 =====
   function render(items){
     grid.innerHTML = '';
     const frag = document.createDocumentFragment();
+
+    const lazyImgs = [];
+    const supportsIO = 'IntersectionObserver' in window;
+    let io = null;
+    if (supportsIO) {
+      io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            const img = entry.target;
+            if(img.dataset.src){ img.src = img.dataset.src; img.removeAttribute('data-src'); }
+            io.unobserve(img);
+          }
+        });
+      }, { rootMargin: '200px 0px' });
+    }
+
+    const eagerCount = (window.innerWidth <= 640) ? 4 : 6;
+
     items.forEach((item,i)=>{
       const li = document.createElement('article');
       li.className='item'; li.setAttribute('role','listitem');
@@ -299,12 +315,18 @@
       const fig=document.createElement('figure');
       const ph=document.createElement('div'); ph.className='thumb'; ph.textContent='이미지 로딩 중...';
       const img=document.createElement('img');
-      img.loading='lazy';
       img.alt=item.title + ' 표지 이미지';
-      img.src=item.cover;
-      img.onerror=function(){ ph.style.display='grid'; img.style.display='none'; };
-      fig.appendChild(ph); fig.appendChild(img);
+      img.setAttribute('decoding','async');
+      img.setAttribute('loading','lazy');
+      img.setAttribute('fetchpriority', i < eagerCount ? 'high' : 'low');
+      img.setAttribute('sizes','(max-width:640px) 92vw, (max-width:1024px) 45vw, 30vw');
 
+      if (i < eagerCount || !supportsIO) { img.src = item.cover; }
+      else { img.dataset.src = item.cover; lazyImgs.push(img); }
+
+      img.onerror=function(){ ph.style.display='grid'; img.style.display='none'; };
+
+      fig.appendChild(ph); fig.appendChild(img);
       const badge=document.createElement('span'); badge.className='badge';
       badge.textContent=item.year + ' · ' + label(item.type);
       fig.appendChild(badge);
@@ -317,26 +339,17 @@
       frag.appendChild(li);
       setTimeout(function(){ li.classList.add('show'); }, 30 + i*25);
     });
+
     grid.appendChild(frag);
+
+    if (supportsIO && lazyImgs.length){
+      lazyImgs.forEach(img=>io.observe(img));
+      setTimeout(()=>{ lazyImgs.forEach(img=>{ if (img.dataset && img.dataset.src) { img.src = img.dataset.src; img.removeAttribute('data-src'); } }); }, 3000);
+    }
   }
 
-  // 멀티선택 필터 상태
-  var activeYears = new Set();
-  var activeTypes = new Set();
-
-  function applyFilters(){
-    var out = ITEMS.filter(function(it){
-      var yOK = (activeYears.size===0 || activeYears.has(String(it.year)));
-      var tOK = (activeTypes.size===0 || activeTypes.has(it.type));
-      return yOK && tOK;
-    });
-    render(out);
-    var allBtn=document.querySelector('.chip[data-action="reset"]');
-    if(allBtn) allBtn.setAttribute('aria-pressed', (activeYears.size===0 && activeTypes.size===0)?'true':'false');
-  }
-
-  // 초기 렌더
-  render(ITEMS);
+  // 초기 렌더 (배열에 적힌 순서대로 그대로 노출됨)
+  render(DATA);
 
   // 필터 버튼 핸들러
   document.querySelectorAll('.chip').forEach(function(btn){
@@ -377,17 +390,16 @@
 
   function setImage() {
     if (!currentImages || currentImages.length === 0) return;
+    lbImg.decoding = 'async';
+    lbImg.loading = 'lazy';
+    lbImg.fetchPriority = 'high';
     lbImg.src = currentImages[currentIndex];
   }
 
   function openLightbox(item){
-    if (item.images && item.images.length) {
-      currentImages = item.images.slice();
-    } else {
-      currentImages = item.cover ? [item.cover] : [];
-    }
-    currentIndex = 0;
-    setImage();
+    if (item.images && item.images.length) { currentImages = item.images.slice(); }
+    else { currentImages = item.cover ? [item.cover] : []; }
+    currentIndex = 0; setImage();
 
     lbTitle.textContent = item.title;
     lbMeta.textContent  = item.year + ' · ' + label(item.type) + ' · ' + item.material + ' · ' + item.size;
@@ -404,104 +416,42 @@
   (function ensureNavButtons(){
     if (document.getElementById('lbPrev')) return;
 
-    var prev = document.createElement('button');
-    prev.id = 'lbPrev';
-    prev.className = 'btn';
-    prev.textContent = '〈';
-
-    var next = document.createElement('button');
-    next.id = 'lbNext';
-    next.className = 'btn';
-    next.textContent = '〉';
+    var prev = document.createElement('button'); prev.id = 'lbPrev'; prev.className = 'btn'; prev.textContent = '〈';
+    var next = document.createElement('button'); next.id = 'lbNext'; next.className = 'btn'; next.textContent = '〉';
 
     var topBar = lb.querySelector('.lb-top');
     var closeBtn = document.getElementById('closeLb');
-    if (topBar && closeBtn) {
-      topBar.insertBefore(prev, closeBtn);
-      topBar.insertBefore(next, closeBtn);
-    }
+    if (topBar && closeBtn) { topBar.insertBefore(prev, closeBtn); topBar.insertBefore(next, closeBtn); }
 
-    prev.addEventListener('click', function(){
-      if (!currentImages || currentImages.length === 0) return;
-      currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
-      setImage();
-    });
-    next.addEventListener('click', function(){
-      if (!currentImages || currentImages.length === 0) return;
-      currentIndex = (currentIndex + 1) % currentImages.length;
-      setImage();
-    });
+    prev.addEventListener('click', function(){ if (!currentImages || currentImages.length === 0) return; currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length; setImage(); });
+    next.addEventListener('click', function(){ if (!currentImages || currentImages.length === 0) return; currentIndex = (currentIndex + 1) % currentImages.length; setImage(); });
 
-    window.addEventListener('keydown', function(e){
-      if (lb.getAttribute('aria-hidden') === 'true') return;
-      if (e.key === 'ArrowLeft')  prev.click();
-      if (e.key === 'ArrowRight') next.click();
-    });
+    window.addEventListener('keydown', function(e){ if (lb.getAttribute('aria-hidden') === 'true') return; if (e.key === 'ArrowLeft')  prev.click(); if (e.key === 'ArrowRight') next.click(); });
 
     var sx = 0;
     lb.addEventListener('touchstart', function(e){ if (e.touches && e.touches[0]) sx = e.touches[0].clientX; }, {passive:true});
-    lb.addEventListener('touchend', function(e){
-      var ex = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : 0;
-      if (!ex) return;
-      var dx = ex - sx;
-      if (Math.abs(dx) < 40) return;
-      if (dx > 0) prev.click(); else next.click();
-    }, {passive:true});
+    lb.addEventListener('touchend', function(e){ var ex = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : 0; if (!ex) return; var dx = ex - sx; if (Math.abs(dx) < 40) return; if (dx > 0) prev.click(); else next.click(); }, {passive:true});
   })();
 
-  // ===== About 모달 (Drawer 버튼에서 열기) =====
+  // ===== About 모달 & Drawer =====
   var about=document.getElementById('about');
   var aboutBtn=document.getElementById('aboutBtn');
   var closeAbout=document.getElementById('closeAbout');
-  function openAbout(){
-    aboutBtn && aboutBtn.setAttribute('aria-expanded','true');
-    about.classList.add('open'); about.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
-  }
-  function closeAboutFn(){
-    about.classList.remove('open'); about.setAttribute('aria-hidden','true'); document.body.style.overflow='';
-    aboutBtn && aboutBtn.setAttribute('aria-expanded','false');
-  }
-  if(aboutBtn){
-    aboutBtn.addEventListener('click', function(){ closeDrawer(); openAbout(); });
-  }
+  function openAbout(){ aboutBtn && aboutBtn.setAttribute('aria-expanded','true'); about.classList.add('open'); about.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function closeAboutFn(){ about.classList.remove('open'); about.setAttribute('aria-hidden','true'); document.body.style.overflow=''; aboutBtn && aboutBtn.setAttribute('aria-expanded','false'); }
+  if(aboutBtn){ aboutBtn.addEventListener('click', function(){ closeDrawer(); openAbout(); }); }
   closeAbout.addEventListener('click', closeAboutFn);
 
-  // ===== Drawer 토글 =====
   var drawer = document.getElementById('drawer');
   var drawerOverlay = document.getElementById('drawerOverlay');
   var menuBtn = document.getElementById('menuBtn');
   var closeDrawerBtn = document.getElementById('closeDrawer');
-
-  function openDrawer(){
-    drawer.classList.add('open');
-    drawer.setAttribute('aria-hidden','false');
-    drawerOverlay.classList.add('open');
-    drawerOverlay.setAttribute('aria-hidden','false');
-    menuBtn.setAttribute('aria-expanded','true');
-    document.body.style.overflow='hidden';
-  }
-  function closeDrawer(){
-    drawer.classList.remove('open');
-    drawer.setAttribute('aria-hidden','true');
-    drawerOverlay.classList.remove('open');
-    drawerOverlay.setAttribute('aria-hidden','true');
-    menuBtn.setAttribute('aria-expanded','false');
-    document.body.style.overflow='';
-  }
-
-  menuBtn.addEventListener('click', function(){
-    if(drawer.classList.contains('open')) closeDrawer(); else openDrawer();
-  });
+  function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); drawerOverlay.classList.add('open'); drawerOverlay.setAttribute('aria-hidden','false'); menuBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
+  function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); drawerOverlay.classList.remove('open'); drawerOverlay.setAttribute('aria-hidden','true'); menuBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+  menuBtn.addEventListener('click', function(){ if(drawer.classList.contains('open')) closeDrawer(); else openDrawer(); });
   closeDrawerBtn.addEventListener('click', closeDrawer);
   drawerOverlay.addEventListener('click', closeDrawer);
-
-  // ESC 닫기 (라이트박스/드로어 공통)
-  window.addEventListener('keydown', function(e){
-    if(e.key==='Escape'){
-      if(drawer.classList.contains('open')) closeDrawer();
-      if(about.classList.contains('open')) closeAboutFn();
-    }
-  });
+  window.addEventListener('keydown', function(e){ if(e.key==='Escape'){ if(drawer.classList.contains('open')) closeDrawer(); if(about.classList.contains('open')) closeAboutFn(); }});
 </script>
 </body>
 </html>
