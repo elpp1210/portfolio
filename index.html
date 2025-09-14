@@ -67,8 +67,21 @@
     .lb-top{display:flex;align-items:center;gap:10px;padding:12px 16px}
     .lb-title{font-weight:400}
     .lb-body{display:grid;grid-template-columns:1fr 400px}
-    .lb-media{background:#000;display:grid;place-items:center}
-    .lb-media img{max-width:100%;max-height:76vh;object-fit:contain}
+    ..lb-media{
+  background:#000;
+  display:flex;
+  justify-content:center;   /* 가로 가운데 */
+  align-items:flex-start;   /* 위에서 시작 (세로 스크롤) */
+  overflow:auto;            /* 스크롤 허용 */
+  max-height:85vh;          /* 화면 안에서 높이 제한 */
+  padding:0;
+}
+.lb-media img{
+  display:block;
+  max-width:100%;           /* 화면 가로에 맞춤 */
+  height:auto;              /* 세로는 비율 유지하면서 늘어남 */
+  object-fit:contain;       /* 가로사진도 안정적으로 */
+}
     .lb-aside{border-left:1px solid var(--line);padding:16px 16px 20px;overflow:auto}
     .lb-aside h3{margin:0 0 10px;font-size:14px;font-weight:400}
     .lb-aside p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.8}
