@@ -69,24 +69,25 @@
    .lb-body{
   display: grid;
   grid-template-columns: 1fr 400px; /* 좌: 이미지, 우: 설명 */
-  overflow: auto;                    /* 내부 스크롤 담당 */
-  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
-  min-height: 0;                     /* 그리드 안 스크롤 막힘 방지 */
+  overflow: auto;                   /* 전체 내용 스크롤 */
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
 }
    .lb-media{
   background:#000;
   display:flex;
   justify-content:center;  /* 가로 가운데 */
-  align-items:flex-start;  /* 위에서 시작 */
+  align-items:center;      /* 세로 가운데 → 긴 세로 사진도 중앙에 */
   padding:0;
-  /* overflow: auto;  ← 있었다면 지워주세요 */
+  /* overflow: auto;  <- 있었다면 제거 */
 }
 .lb-media img{
   display:block;
-  width:100%;
+  width:auto;              /* 가로/세로 비율 유지 */
   height:auto;
-  object-fit: contain;     /* 가로사진도 안정적 표시 */
-  /* max-height:76vh; ← 있었다면 지워주세요 */
+  max-width:100%;          /* 프레임 가로에 맞춤 */
+  max-height:76vh;         /* 프레임 높이 안쪽으로 딱 맞게 */
+  object-fit:contain;      /* 사진 비율 유지 */
 }
     .lb-aside{border-left:1px solid var(--line);padding:16px 16px 20px;overflow:auto}
     .lb-aside h3{margin:0 0 10px;font-size:14px;font-weight:400}
@@ -109,8 +110,28 @@
       .btn,.chip{padding:9px 12px;font-size:12px}
     }
    @media (max-width: 640px){
-  .lb-body{ grid-template-columns: 1fr; }
-  .lb-aside{ border-left:none; border-top:1px solid var(--line); }
+  .lightbox{
+    align-items:flex-start; /* 프레임을 위에서부터 배치 */
+    overflow:auto;          /* 라이트박스 자체가 스크롤 담당 */
+  }
+  .lightbox .frame{
+    max-height:none;        /* 높이 제한 해제 */
+    height:auto;
+    overflow:visible;       /* 내부 잘림 방지 */
+  }
+  .lb-body{
+    display:block;          /* 한 컬럼 */
+    overflow:visible;       /* 스크롤은 부모(lightbox)가 담당 */
+  }
+  .lb-media img{
+    width:100%;             /* 모바일에선 가로 꽉 차게 */
+    height:auto;
+    max-height:none;        /* 긴 세로 사진도 전체 표시되며 페이지와 함께 스크롤 */
+  }
+  .lb-aside{
+    border-left:none;
+    border-top:1px solid var(--line); /* 이미지 아래로 설명 */
+  }
 }
   </style>
 </head>
