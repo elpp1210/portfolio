@@ -111,26 +111,40 @@
     }
    @media (max-width: 640px){
   .lightbox{
-    align-items:flex-start; /* 프레임을 위에서부터 배치 */
-    overflow:auto;          /* 라이트박스 자체가 스크롤 담당 */
+    align-items:flex-start;
+    justify-content:center;
+    overflow:auto;          /* 스크롤 컨테이너 */
+    padding:16px;           /* 프레임 주변 여백(둥근모서리 보이게) */
   }
   .lightbox .frame{
-    max-height:none;        /* 높이 제한 해제 */
-    height:auto;
-    overflow:visible;       /* 내부 잘림 방지 */
+    width:100%;
+    max-width:680px;        /* 필요 시 조절 */
+    border-radius:20px;     /* ← 둥근모서리 유지 */
+    overflow:hidden;        /* ← 반드시 hidden! (여기서 visible 쓰면 각진 듯 보여요) */
+    background:#fff;        /* 프레임 바탕색 */
+    height:auto;            /* 내용 높이에 맞춤 */
+    max-height:none;        /* 제한 해제 (스크롤은 .lightbox가 함) */
   }
   .lb-body{
-    display:block;          /* 한 컬럼 */
-    overflow:visible;       /* 스크롤은 부모(lightbox)가 담당 */
+    display:block;          /* 한 컬럼 레이아웃 */
+    overflow:visible;       /* 내부는 굳이 스크롤 안 함 */
+  }
+  .lb-media{
+    background:#000;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:0;
   }
   .lb-media img{
-    width:100%;             /* 모바일에선 가로 꽉 차게 */
+    width:100%;
     height:auto;
-    max-height:none;        /* 긴 세로 사진도 전체 표시되며 페이지와 함께 스크롤 */
+    max-height:none;        /* 긴 세로사진도 전부 표시 */
+    object-fit:contain;
   }
   .lb-aside{
     border-left:none;
-    border-top:1px solid var(--line); /* 이미지 아래로 설명 */
+    border-top:1px solid var(--line);
   }
 }
   </style>
