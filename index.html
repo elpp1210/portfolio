@@ -48,6 +48,11 @@
     .chip[aria-pressed="true"], .btn[aria-pressed="true"]{border-color:#c9ccd5;box-shadow:0 0 0 4px var(--ring)}
 
     /* Gallery */
+    .item figure > picture{
+  display:block;       /* inline → block */
+  width:100%;
+  height:100%;         /* figure의 4:3 높이를 그대로 채움 */
+}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
     .item{grid-column:span 4;position:relative;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);opacity:0;transform:translateY(4px);content-visibility:auto;contain-intrinsic-size:300px 225px}
     .item.show{opacity:1;transform:none;transition:opacity .28s ease, transform .28s ease}
@@ -235,91 +240,76 @@
 <script>
 // ===== 좌측 얇은 원(스포어) 군집 애니메이션 — leap/burst 포함 =====
 (function(){
-  const hero = document.querySelector('main');        
-const canvas = document.getElementById('sporesCanvas'); 
+  const hero   = document.querySelector('main');         // 기준 영역
+  const canvas = document.getElementById('sporesCanvas');
   if(!hero || !canvas) return;
 
   const ctx = canvas.getContext('2d', { alpha: true });
-  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+  // --- state (fit()보다 위에 선언!) ---
   let W = 0, H = 0;
+  const spores = [];
+  const MAX_SPORES = 600;
+  const R = 11;
+  const STROKE = 'rgba(0,0,0,0.28)';
+  const FILL   = '#ffffff';
+
+  let center = { x: 80, y: 0 }; // y는 fit()에서 1회 세팅
+  let spreadX = 30, spreadY = 20;
+  let initialized = false;
+
+  let nextSpawn = 120 + Math.random()*120;
+  let last = performance.now();
 
   function fit(){
     const rect = hero.getBoundingClientRect();
+
+    // (옵션) 예전 감성: 필터 바닥 + 여유만큼만 높이 잡기
+    const filters   = document.querySelector('.filters');
+    const baseEnd   = 420;
+    const filtersEnd= filters ? (filters.getBoundingClientRect().bottom - rect.top) : baseEnd;
+    const bleed     = (window.innerWidth <= 640) ? 60 : 30;
+    H = Math.max(baseEnd, Math.ceil(filtersEnd + bleed));
+
     W = Math.floor(rect.width);
-    H = Math.floor(rect.height);
-    canvas.style.width = W + 'px';
+
+    canvas.style.width  = W + 'px';
     canvas.style.height = H + 'px';
     canvas.width  = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
 
-  // 상태값
-  const spores = [];
-  const MAX_SPORES = 600;     // 최대 개수
-  const R = 11;                // 원 반지름 (얇은 느낌 유지)
-  const STROKE = 'rgba(0,0,0,0.28)';
-  const FILL   = '#ffffff';
-
-  // 진행 중심과 확산값
-  let center = { x: 80, y: H * 0.75 };
-  let spreadX = 30, spreadY = 20;
-
-  // 모바일 초기 시작점 살짝 더 왼쪽/아래
-  if (window.innerWidth <= 640) {
-    center.x = 10;
-    center.y = H * 0.88;
-  }
-
-  // 스폰 타이밍
-  let nextSpawn = 120 + Math.random()*120;
-  let last = performance.now();
-
-  function drawFrame(now){
-    const dt = Math.min(48, now - last); last = now;
-
-    // 캔버스 클리어
-    ctx.clearRect(0,0,W,H);
-
-    // 그리기
-    ctx.lineWidth = 1; ctx.strokeStyle = STROKE; ctx.fillStyle = FILL;
-    for (const s of spores){
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, R, 0, Math.PI*2);
-      ctx.fill(); ctx.stroke();
+    // 높이 결정된 뒤 '처음 한 번만' 중심 세팅
+    if (!initialized) {
+      const isMobile = window.innerWidth <= 640;
+      center.x = isMobile ? 10 : 80;
+      center.y = isMobile ? H * 0.88 : H * 0.75;
+      initialized = true;
     }
-
-    // 스폰 타이머
-    nextSpawn -= dt;
-    if (nextSpawn <= 0){
-      for (let i=0;i<3;i++) spawn(i>0);   // 군집 느낌으로 3개씩
-      nextSpawn = 120 + Math.random()*120;
-    }
-
-    requestAnimationFrame(drawFrame);
-  }
+  } // ← fit() 닫힘
 
   function spawn(fromSeed){
     // 진행 방향 랜덤 튐: leap/burst 모드
     const rand    = Math.random();
-    const isLeap  = rand < 0.55;              // 멀리 '뿅'
-    const isBurst = !isLeap && rand < 0.80;   // 넓게 퍼짐
+    const isLeap  = rand < 0.55;            // 멀리 '뿅'
+    const isBurst = !isLeap && rand < 0.80; // 넓게 퍼짐
 
-    // 중심점/확산 업데이트(시드가 아닐 때만)
+    // 시드가 아닐 때만 중심/확산 갱신
     if (!fromSeed){
-      center.x += 0.12; // 우측으로 살짝
+      center.x += 0.12; // 우측 살짝
       center.y -= 0.05; // 위로 살짝
       spreadX = Math.min(spreadX + 0.95, W * 0.95);
       spreadY = Math.min(spreadY + 0.65, H * 0.65);
     }
 
-    // 기본 진행각: 우상향(-45도) 주변, 가끔 완전 랜덤
-    const baseAngle = -Math.PI/4;
+    // 기본 진행각(우상향), 가끔 완전 랜덤
+    const baseAngle = -Math.PI / 4;
     const angle = (Math.random() < 0.10)
       ? Math.random() * Math.PI * 2
       : baseAngle + (Math.random()-0.5) * 0.28;
 
-    const minDist = 16; // 과도한 겹침 방지(일부 겹침 허용)
+    const minDist = 16; // 과도한 겹침 방지(일부 허용)
     let x, y, ok = false;
 
     for (let tries = 0; tries < 20 && !ok; tries++){
@@ -344,13 +334,35 @@ const canvas = document.getElementById('sporesCanvas');
     }
   }
 
+  function drawFrame(now){
+    const dt = Math.min(48, now - last); last = now;
+    ctx.clearRect(0,0,W,H);
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = STROKE;
+    ctx.fillStyle   = FILL;
+
+    for (const s of spores){
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, R, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    nextSpawn -= dt;
+    if (nextSpawn <= 0){
+      for (let i=0;i<3;i++) spawn(i>0); // 군집 느낌으로 3개씩
+      nextSpawn = 120 + Math.random()*120;
+    }
+
+    requestAnimationFrame(drawFrame);
+  }
+
   // 초기화
-  const ro = new ResizeObserver(()=>{ fit(); });
+  const ro = new ResizeObserver(fit);
   ro.observe(hero);
   fit();
-  // 시작시 약간 채워두기
-  for (let i=0;i<12;i++) spawn(false);
-
+  for (let i=0;i<12;i++) spawn(false); // 시작 시 약간 채우기
   requestAnimationFrame(drawFrame);
 })();
 </script>
