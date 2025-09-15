@@ -32,17 +32,8 @@
     .hero p{margin:0;color:var(--muted);font-size:16px;line-height:1.9;max-width:820px}
 
     /* Spores canvas */
-    #sporesCanvas{
-  position:absolute;
-  top:0;
-  left:-20px;   /* 컨텐츠 패딩만큼 확장 */
-  right:-20px;  /* 컨텐츠 패딩만큼 확장 */
-  width:auto;   /* right 사용 → width:auto */
-  height:420px; /* 초기값 (JS에서 덮어씀) */
-  pointer-events:none;
-  z-index:0;
-}
-.filters{ position:relative; z-index:1; }
+    #sporesCanvas{ position:absolute; left:0; top:0; width:100%; height:420px; pointer-events:none; z-index:0; }
+    .filters{ position:relative; z-index:1; }
 
     /* Filters */
     .filters{display:flex;flex-direction:column;align-items:center;gap:14px;margin:28px 0 56px}
@@ -105,17 +96,13 @@
 
     /* Lightbox mobile */
     @media (max-width: 640px){
-  .lightbox{align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
-  .lightbox .frame{width:100%;max-width:680px;border-radius:20px;overflow:hidden;background:#fff;height:auto;max-height:none}
-  .lb-body{display:block;overflow:visible}
-  .lb-media{background:#000;display:flex;justify-content:center;align-items:flex-start;padding:0}
-  .lb-media img{width:100%;height:auto;max-height:none;object-fit:contain}
-  .lb-aside{border-left:none;border-top:1px solid var(--line)}
-
-  /* 여기 두 줄 추가 —— 글을 위로, 캔버스 옅게 */
-  .hero{ position: relative; z-index: 1; }
-  #sporesCanvas{ opacity: .95; }
-}
+      .lightbox{align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
+      .lightbox .frame{width:100%;max-width:680px;border-radius:20px;overflow:hidden;background:#fff;height:auto;max-height:none}
+      .lb-body{display:block;overflow:visible}
+      .lb-media{background:#000;display:flex;justify-content:center;align-items:flex-start;padding:0}
+      .lb-media img{width:100%;height:auto;max-height:none;object-fit:contain}
+      .lb-aside{border-left:none;border-top:1px solid var(--line)}
+    }
   </style>
 </head>
 <body>
@@ -245,128 +232,87 @@
     <a class="btn" href="#contact">Contact</a>
   </div>
 </aside>
+
 <script>
-// ====== Spores Canvas (cluster, equal size discs) ======
-(function(){
-  const cvs = document.getElementById('sporesCanvas');
-  if(!cvs) return;
-  const ctx = cvs.getContext('2d', { alpha:true });
-  const DPR = Math.min(2, window.devicePixelRatio||1);
+  // ====== Spores Canvas (cluster, equal size discs) ======
+  (function(){
+    const cvs = document.getElementById('sporesCanvas');
+    if(!cvs) return;
+    const ctx = cvs.getContext('2d', { alpha:true });
+    const DPR = Math.min(2, window.devicePixelRatio||1);
 
-  // ✔ sizeCanvas()에서 쓸 W/H를 먼저 선언 (TDZ 오류 방지)
-  let W = 0, H = 0;
+    function sizeCanvas(){
+      const r = cvs.getBoundingClientRect();
+      cvs.width  = Math.max(1, Math.floor(r.width  * DPR));
+      cvs.height = Math.max(1, Math.floor(r.height * DPR));
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+    }
+    sizeCanvas();
+    new ResizeObserver(sizeCanvas).observe(cvs);
+    window.addEventListener('resize', sizeCanvas);
 
-  function sizeCanvas(){
-    const main    = document.querySelector('main');
-    const filters = document.querySelector('.filters');
-    const mrect   = main.getBoundingClientRect();
+    const R = 4; // 모두 같은 크기
+    const STROKE = 'rgba(0,0,0,0.28)';
+    const FILL   = '#ffffff';
+    const MAX_SPORES = 220;
+    const spores = [];
 
-    // hero 뿐 아니라 filters 바닥까지 덮도록 높이 계산
-    const baseEnd    = 420; // 최소 높이
-    const filtersEnd = filters ? (filters.getBoundingClientRect().bottom - mrect.top) : baseEnd;
+    let W = cvs.getBoundingClientRect().width;
+    let H = cvs.getBoundingClientRect().height;
+    let center = { x: 120, y: H*0.35 };
+    let spreadX = 30, spreadY = 20;
+    let nextSpawn = 120 + Math.random()*120; // 속도 약간 빠르게
+    let last = performance.now();
 
-    // 모바일은 여유(bleed) 더 주기
-    const bleed = (window.innerWidth <= 640) ? 60 : 30;
-    const Hcss  = Math.max(baseEnd, Math.ceil(filtersEnd + bleed));
+    function draw(now){
+      const dt = Math.min(48, now - last); last = now;
+      ctx.clearRect(0,0,cvs.width/DPR,cvs.height/DPR);
 
-    // 좌우 -20px씩 뻗었으니 실제 너비는 본문 + 40
-    const Wcss  = Math.ceil(mrect.width + 40);
+      ctx.lineWidth = 1; ctx.strokeStyle = STROKE; ctx.fillStyle = FILL;
+      for(const s of spores){
+        ctx.beginPath(); ctx.arc(s.x, s.y, R, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      }
 
-    // CSS 크기/픽셀 해상도 세팅
-    cvs.style.height = Hcss + 'px'; // width는 left/right로 결정됨
-    cvs.width  = Math.max(1, Math.floor(Wcss * DPR));
-    cvs.height = Math.max(1, Math.floor(Hcss * DPR));
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-
-    // 그리기용 W/H 갱신
-    W = Wcss;
-    H = Hcss;
-  }
-  sizeCanvas();
-  new ResizeObserver(sizeCanvas).observe(cvs);
-  window.addEventListener('resize', sizeCanvas);
-
-  const R = 11; // 모두 같은 크기
-  const STROKE = 'rgba(0,0,0,0.25)';
-  const FILL   = '#ffffff';
-  const MAX_SPORES = 600; // 최대 개수 확장
-  const spores = [];
-
-  // 시작 중심점 (모바일은 더 왼쪽/아래에서 시작)
-  let center = { x: 80, y: H * 0.75 };
-  if (window.innerWidth <= 640) {
-    center.x = 10;       // 왼쪽 가장자리 쪽
-    center.y = H * 0.88; // 화면 안쪽에서 살짝 아래
-  }
-
-  let spreadX = 30, spreadY = 20;
-  let nextSpawn = 120 + Math.random() * 120; // 스폰 간격
-  let last = performance.now();
-
-  function draw(now){
-    const dt = Math.min(48, now - last); last = now;
-    ctx.clearRect(0,0,cvs.width/DPR,cvs.height/DPR);
-
-    ctx.lineWidth = 1; ctx.strokeStyle = STROKE; ctx.fillStyle = FILL;
-    for (const s of spores){
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, R, 0, Math.PI*2);
-      ctx.fill(); ctx.stroke();
+      nextSpawn -= dt;
+      if(nextSpawn <= 0){
+        for(let i=0;i<3;i++) spawn(i>0); // 군집으로 3개씩
+        nextSpawn = 120 + Math.random()*120;
+      }
+      requestAnimationFrame(draw);
     }
 
-    nextSpawn -= dt;
-    if (nextSpawn <= 0){
-      for (let i=0;i<3;i++) spawn(i>0); // 군집으로 3개씩
-      nextSpawn = 120 + Math.random() * 120;
+    function spawn(fromSeed){
+      if(!fromSeed){
+        center.x += 0.12; // 우측
+        center.y -= 0.05; // 위쪽
+        spreadX = Math.min(spreadX + 0.95, W * 0.36);
+        spreadY = Math.min(spreadY + 0.65, H * 0.32);
+      }
+      const baseAngle = -Math.PI/4; // 우상향
+      const angle = (Math.random()<0.10)
+        ? Math.random()*Math.PI*2
+        : baseAngle + (Math.random()-0.5)*0.28;
+
+      const rect = cvs.getBoundingClientRect(); W = rect.width; H = rect.height;
+
+      const minDist = 16; // 같은 자리 중복 방지(겹침 일부 허용)
+      let x,y,ok=false;
+      for(let tries=0; tries<20 && !ok; tries++){
+        const distX = Math.pow(Math.random(), 0.6) * spreadX;
+        const distY = Math.pow(Math.random(), 0.6) * spreadY;
+        x = center.x + Math.cos(angle) * distX;
+        y = center.y + Math.sin(angle) * distY;
+        ok = spores.every(s => ((s.x-x)**2 + (s.y-y)**2) > (minDist*minDist*0.6));
+      }
+      if(ok){
+        spores.push({x,y});
+        if(spores.length > MAX_SPORES) spores.shift();
+      }
     }
+
     requestAnimationFrame(draw);
-  }
-
-  function spawn(fromSeed){
-    // 분산 모드 확률 (필요하면 수치만 조절)
-    const rand    = Math.random();
-    const isLeap  = rand < 0.45;              // 멀리 '뿅' (많이 보고 싶으면 값 ↑)
-    const isBurst = !isLeap && rand < 0.80;   // 기본보다 넓게 퍼지는 군집
-
-    if (!fromSeed){
-      center.x += 0.12; // 우측으로 살짝
-      center.y -= 0.05; // 위로 살짝
-      spreadX = Math.min(spreadX + 0.95, W * 0.36);
-      spreadY = Math.min(spreadY + 0.65, H * 0.32);
-    }
-
-    const baseAngle = -Math.PI/4; // 우상향
-    const angle = (Math.random() < 0.10)
-      ? Math.random() * Math.PI * 2                // 예외 방향
-      : baseAngle + (Math.random()-0.5) * 0.28;    // 기본 방향 주변
-
-    const minDist = 16; // 같은 자리 중복 방지(겹침 일부 허용)
-    let x, y, ok = false;
-
-    for (let tries = 0; tries < 20 && !ok; tries++){
-      const pow   = isLeap ? 0.35 : (isBurst ? 0.50 : 0.60);
-      const multX = isLeap ? (2.2 + Math.random()*1.1) : (isBurst ? (1.6 + Math.random()*0.9) : 1.0);
-      const multY = isLeap ? (1.6 + Math.random()*0.9) : (isBurst ? (1.2 + Math.random()*0.6) : 1.0);
-
-      const distX = Math.pow(Math.random(), pow) * spreadX * multX;
-      const distY = Math.pow(Math.random(), pow) * spreadY * multY;
-
-      x = center.x + Math.cos(angle) * distX;
-      y = center.y + Math.sin(angle) * distY;
-
-      ok = spores.every(s => ((s.x - x) ** 2 + (s.y - y) ** 2) > (minDist * minDist * 0.6));
-    }
-
-    if (ok){
-      spores.push({ x, y });
-      if (spores.length > MAX_SPORES) spores.shift();
-    }
-  }
-
-  requestAnimationFrame(draw);
-})();
+  })();
 </script>
-
 <script>
   // =====================================================
   // 데이터 작성 팁
@@ -492,64 +438,112 @@
   }
 
   // ===== 이미지 지연 로딩 최적화 (placeholder 없음) =====
-  function render(items){
-    const grid = document.getElementById('grid');
-    grid.innerHTML = '';
-    const frag = document.createDocumentFragment();
+ function render(items){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const frag = document.createDocumentFragment();
 
-    const lazyImgs = [];
-    const supportsIO = 'IntersectionObserver' in window;
-    let io = null;
-    if (supportsIO) {
-      io = new IntersectionObserver((entries)=>{
-        entries.forEach(entry=>{
-          if(entry.isIntersecting){
-            const img = entry.target;
-            if(img.dataset.src){ img.src = img.dataset.src; img.removeAttribute('data-src'); }
-            io.unobserve(img);
-          }
-        });
-      }, { rootMargin: '200px 0px' });
+  const supportsIO = 'IntersectionObserver' in window;
+  let io = null;
+  if (supportsIO) {
+    io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const pic = entry.target;
+          const sWebp = pic.querySelector('source[type="image/webp"]');
+          const sJpg  = pic.querySelector('source:not([type])');
+          const img   = pic.querySelector('img');
+
+          if (sWebp && sWebp.dataset.srcset){ sWebp.srcset = sWebp.dataset.srcset; sWebp.removeAttribute('data-srcset'); }
+          if (sJpg  && sJpg.dataset.srcset){  sJpg.srcset  = sJpg.dataset.srcset;  sJpg.removeAttribute('data-srcset');  }
+          if (img   && img.dataset.src){      img.src      = img.dataset.src;      img.removeAttribute('data-src');      }
+
+          io.unobserve(pic);
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+  }
+
+  const eagerCount = (window.innerWidth <= 640) ? 4 : 6;
+
+  items.forEach((item,i)=>{
+    const li = document.createElement('article');
+    li.className='item'; li.setAttribute('role','listitem');
+
+    const fig=document.createElement('figure');
+
+    // <picture> + srcset/sizes로 자동 리사이즈 + 포맷 전환
+    const picture = document.createElement('picture');
+    const sizes = '(max-width:640px) 92vw, (max-width:1024px) 45vw, 30vw';
+
+    const srcsetWebp = [
+      toWeserv(item.cover, 400,  'webp', 75) + ' 400w',
+      toWeserv(item.cover, 800,  'webp', 75) + ' 800w',
+      toWeserv(item.cover, 1200, 'webp', 75) + ' 1200w'
+    ].join(', ');
+    const srcsetJpg = [
+      toWeserv(item.cover, 400,  'jpg', 78) + ' 400w',
+      toWeserv(item.cover, 800,  'jpg', 78) + ' 800w',
+      toWeserv(item.cover, 1200, 'jpg', 78) + ' 1200w'
+    ].join(', ');
+
+    const s1 = document.createElement('source');
+    s1.type = 'image/webp';
+    s1.sizes = sizes;
+
+    const s2 = document.createElement('source');
+    s2.sizes = sizes;
+
+    const img = document.createElement('img');
+    img.alt=item.title + ' 표지 이미지';
+    img.decoding='async';
+    img.loading='lazy';
+    img.fetchPriority = (i < eagerCount ? 'high' : 'low');
+    // 고정된 intrinsic 비율(4:3)에 맞춘 힌트 값 (레이아웃 점프 줄이기)
+    img.width  = 1200;
+    img.height = 900;
+    img.setAttribute('sizes', sizes);
+
+    if (i < eagerCount || !supportsIO) {
+      // 바로 보일 것들은 즉시 세팅
+      s1.srcset = srcsetWebp;
+      s2.srcset = srcsetJpg;
+      img.src   = toWeserv(item.cover, 800, 'jpg', 78);
+    } else {
+      // 아래에서 IO가 보일 때 실제 로드
+      s1.dataset.srcset = srcsetWebp;
+      s2.dataset.srcset = srcsetJpg;
+      img.dataset.src   = toWeserv(item.cover, 800, 'jpg', 78);
     }
 
-    const eagerCount = (window.innerWidth <= 640) ? 4 : 6;
+    picture.appendChild(s1);
+    picture.appendChild(s2);
+    picture.appendChild(img);
 
-    items.forEach((item,i)=>{
-      const li = document.createElement('article');
-      li.className='item'; li.setAttribute('role','listitem');
+    img.onerror=function(){ img.style.display='none'; };
 
-      const fig=document.createElement('figure');
-      const img=document.createElement('img');
+    fig.appendChild(picture);
 
-      img.alt=item.title + ' 표지 이미지';
-      img.setAttribute('decoding','async');
-      img.setAttribute('loading','lazy');
-      img.setAttribute('fetchpriority', i < eagerCount ? 'high' : 'low');
-      img.setAttribute('sizes','(max-width:640px) 92vw, (max-width:1024px) 45vw, 30vw');
+    const badge=document.createElement('span'); badge.className='badge';
+    badge.textContent=item.year + ' · ' + label(item.type);
+    fig.appendChild(badge);
 
-      if (i < eagerCount || !supportsIO) { img.src = item.cover; }
-      else { img.dataset.src = item.cover; lazyImgs.push(img); }
+    const meta=document.createElement('div'); meta.className='meta';
+    meta.innerHTML='<div class="title">'+item.title+'</div><div class="desc">'+item.material+' · '+item.size+'</div>';
+    li.appendChild(fig); li.appendChild(meta);
 
-      // 에러 시 텍스트 없이 그냥 이미지 숨김
-      img.onerror=function(){ img.style.display='none'; };
+    li.addEventListener('click',function(){ openLightbox(item); });
 
-      fig.appendChild(img);
+    const delay = 30 + i*25;
+    setTimeout(function(){ li.classList.add('show'); }, delay);
 
-      const badge=document.createElement('span'); badge.className='badge';
-      badge.textContent=item.year + ' · ' + label(item.type);
-      fig.appendChild(badge);
+    frag.appendChild(li);
 
-      const meta=document.createElement('div'); meta.className='meta';
-      meta.innerHTML='<div class="title">'+item.title+'</div><div class="desc">'+item.material+' · '+item.size+'</div>';
-      li.appendChild(fig); li.appendChild(meta);
+    if (supportsIO && i >= eagerCount) io.observe(picture);
+  });
 
-      li.addEventListener('click',function(){ openLightbox(item); });
-      frag.appendChild(li);
-      setTimeout(function(){ li.classList.add('show'); }, 30 + i*25);
-    });
-
-    grid.appendChild(frag);
-
+  grid.appendChild(frag);
+}
     if (supportsIO && lazyImgs.length){
       lazyImgs.forEach(img=>io.observe(img));
       // 안전망: 3초 뒤에도 트리거 안 오면 강제 로드
@@ -602,7 +596,7 @@
     lbImg.decoding = 'async';
     lbImg.loading = 'lazy';
     lbImg.fetchPriority = 'high';
-    lbImg.src = currentImages[currentIndex];
+    lbImg.src = toWeserv(currentImages[currentIndex], 1600, 'webp', 78);
   }
 
   function openLightbox(item){
