@@ -251,7 +251,7 @@
     new ResizeObserver(sizeCanvas).observe(cvs);
     window.addEventListener('resize', sizeCanvas);
 
-    const R = 7; // 모두 같은 크기
+    const R = 10; // 모두 같은 크기
     const STROKE = 'rgba(0,0,0,0.25)';
     const FILL   = '#ffffff';
     const MAX_SPORES = 220;
@@ -259,7 +259,7 @@
 
     let W = cvs.getBoundingClientRect().width;
     let H = cvs.getBoundingClientRect().height;
-    let center = { x: 80, y: H*0.55 };
+    let center = { x: 80, y: H*0.35 };
     let spreadX = 30, spreadY = 20;
     let nextSpawn = 120 + Math.random()*120; // 속도 약간 빠르게
     let last = performance.now();
