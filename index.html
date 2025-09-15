@@ -282,6 +282,9 @@
     }
 
     function spawn(fromSeed){
+      const rand = Math.random();
+  const isLeap  = rand < 0.28;           // 멀리 '뿅' 나타나는 예외
+  const isBurst = !isLeap && rand < 0.50; // 기본보다 조금 멀리 퍼지는 군집
       if(!fromSeed){
         center.x += 0.12; // 우측
         center.y -= 0.05; // 위쪽
