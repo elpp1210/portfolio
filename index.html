@@ -238,23 +238,30 @@
   </div>
 </aside>
 <script>
-// ===== Spores Canvas (더 강한 leap/burst + 초기 위치 고정) =====
+// ===== Spores Canvas (마우스 회피 반응 포함, 반경/밀려남 상향) =====
 (function(){
-  const hero   = document.querySelector('main');          // 기준 영역
-  const canvas = document.getElementById('sporesCanvas'); // 반드시 존재해야 함
+  const hero   = document.querySelector('main');
+  const canvas = document.getElementById('sporesCanvas');
   if (!hero || !canvas) return;
 
   const ctx = canvas.getContext('2d', { alpha: true });
   const dpr = Math.min(2, window.devicePixelRatio || 1);
 
-  // ---- 튜닝 노브 (느낌 바꾸고 싶으면 여기만 조절) ----
-  const LEAP_P          = 0.70;  // 멀리 튀는 비율 ↑
+  // ---- 튜닝 노브 ----
+  const LEAP_P          = 0.70;  // 멀리 튀는 확률
   const BURST_P         = 0.90;  // 넓게 퍼지는 군집 (LEAP 실패 시)
-  const SUPERLEAP_P     = 0.08;  // 아주 멀~리 점프
+  const SUPERLEAP_P     = 0.08;  // 아주 멀리 점프
   const RANDOM_ANGLE_P  = 0.12;  // 완전 랜덤 각도
-  const REVERSE_P       = 0.05;  // 가끔 역방향 턴
-  const ANGLE_JITTER    = 0.60;  // 기본 각 주변 흔들림 (라디안)
-  const MIN_DIST        = 18;    // 겹침 억제 (작을수록 더 뭉침)
+  const REVERSE_P       = 0.05;  // 가끔 역방향
+  const ANGLE_JITTER    = 0.60;  // 기본 각 주변 흔들림(라디안)
+  const MIN_DIST        = 18;    // 원들끼리 최소 거리(겹침 억제)
+
+  // ---- 마우스 회피 파라미터 (요청값 반영) ----
+  const IS_MOBILE    = () => window.innerWidth <= 640;
+  const MOUSE_RADIUS = () => IS_MOBILE() ? 140 : 200;  // 영향 반경 ↑
+  const MAX_PUSH     = () => IS_MOBILE() ? 36  : 60;   // 최대 밀려남 거리 ↑
+  const LERP         = 0.18;                           // 따라가는 속도 (0~1)
+  const DECAY        = 0.90;                           // 잔상 감쇠 (1에 가까울수록 길게 남음)
 
   // ---- 상태 ----
   let W = 0, H = 0;
@@ -264,52 +271,60 @@
   const STROKE = 'rgba(0,0,0,0.28)';
   const FILL   = '#ffffff';
 
-  let center = { x: 80, y: 0 };         // y는 fit() 때 1회 세팅
+  let center = { x: 80, y: 0 };
   let spreadX = 30, spreadY = 20;
   let initialized = false;
 
   let nextSpawn = 130 + Math.random() * 130;
   let last = performance.now();
 
+  // ---- 마우스 좌표(캔버스 기준) ----
+  const mouse = { x: Infinity, y: Infinity, active: false };
+  function updateMouse(e){
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+    mouse.active = true;
+  }
+  hero.addEventListener('pointermove',  updateMouse, {passive:true});
+  hero.addEventListener('pointerenter', updateMouse, {passive:true});
+  hero.addEventListener('pointerleave', ()=>{ mouse.active = false; }, {passive:true});
+
+  // ---- 리사이즈 & 초기 중심 세팅 ----
   function fit(){
     const rect = hero.getBoundingClientRect();
-
-    // 필터 섹션 끝 + 여백 기준으로 캔버스 높이 계산 (예전 느낌 유지)
     const filters    = document.querySelector('.filters');
     const baseEnd    = 420; // 최소 높이
     const filtersEnd = filters ? (filters.getBoundingClientRect().bottom - rect.top) : baseEnd;
-    const bleed      = (window.innerWidth <= 640) ? 60 : 30;
+    const bleed      = IS_MOBILE() ? 60 : 30;
+
     H = Math.max(baseEnd, Math.ceil(filtersEnd + bleed));
     W = Math.floor(rect.width);
 
-    // 캔버스 리사이즈
     canvas.style.width  = W + 'px';
     canvas.style.height = H + 'px';
     canvas.width  = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
 
-    // 처음 한 번만 중심 좌표 세팅 (리사이즈해도 y가 위로 밀리지 않게)
     if (!initialized){
-      const isMobile = window.innerWidth <= 640;
-      center.x = isMobile ? 10 : 80;
-      center.y = isMobile ? H * 0.88 : H * 0.80; // 살짝 더 아래로
+      center.x = IS_MOBILE() ? 10 : 80;
+      center.y = IS_MOBILE() ? H * 0.88 : H * 0.80;
       initialized = true;
     }
   }
 
+  // ---- 스포어 스폰 ----
   function spawn(fromSeed){
-    // 모드 결정
     const r = Math.random();
     const isLeap      = r < LEAP_P;
     const isBurst     = !isLeap && r < BURST_P;
     const isSuperLeap = Math.random() < SUPERLEAP_P;
 
-    // 시드가 아닐 때만 중심 이동/확산 증가
     if (!fromSeed){
-      center.x += 0.12; // 우측
-      center.y -= 0.05; // 위 (너무 올라가면 아래로 되돌림)
-      if (center.y < H * 0.28) center.y = H * 0.28; // 상단 과상승 방지
+      center.x += 0.12;                // 우측 이동
+      center.y -= 0.05;                // 천천히 위로
+      if (center.y < H * 0.28) center.y = H * 0.28;
 
       spreadX = Math.min(spreadX + 0.95, W * 0.95);
       spreadY = Math.min(spreadY + 0.65, H * 0.65);
@@ -324,7 +339,7 @@
       if (Math.random() < REVERSE_P) angle += Math.PI;
     }
 
-    // 분포 파라미터: pow 작을수록 먼 거리로 치우침
+    // 분포 파라미터: pow 낮을수록 먼 거리로 치우침
     const pow   = isSuperLeap ? 0.18 : (isLeap ? 0.28 : (isBurst ? 0.45 : 0.60));
     const multX = isSuperLeap ? (3.2 + Math.random()*1.4)
               : isLeap       ? (2.4 + Math.random()*1.2)
@@ -344,18 +359,20 @@
       x = center.x + Math.cos(angle) * distX;
       y = center.y + Math.sin(angle) * distY;
 
-      // 화면 밖으로 과하게 나가면 재시도(아주 살짝은 허용)
+      // 화면 밖 과도 이탈 방지(살짝은 허용)
       if (x < -50 || x > W + 50 || y < -50 || y > H + 50) continue;
 
       ok = spores.every(s => ((s.x - x) ** 2 + (s.y - y) ** 2) > min2);
     }
 
     if (ok){
-      spores.push({ x, y });
+      // 회피 오프셋 저장용 (ox, oy)
+      spores.push({ x, y, ox: 0, oy: 0 });
       if (spores.length > MAX_SPORES) spores.shift();
     }
   }
 
+  // ---- 프레임 드로우 ----
   function drawFrame(now){
     const dt = Math.min(48, now - last); last = now;
     ctx.clearRect(0,0,W,H);
@@ -364,30 +381,57 @@
     ctx.strokeStyle = STROKE;
     ctx.fillStyle   = FILL;
 
+    const rad  = MOUSE_RADIUS();
+    const push = MAX_PUSH();
+
     for (const s of spores){
+      // 마우스 회피 목표 오프셋
+      let tx = 0, ty = 0;
+      if (mouse.active){
+        const dx = s.x - mouse.x;
+        const dy = s.y - mouse.y;
+        const d  = Math.hypot(dx, dy);
+        if (d > 0 && d < rad){
+          // 가까울수록 더 세게 밀림 (f^2 감쇠)
+          const f = (1 - d / rad);
+          const mag = push * f * f;
+          tx = (dx / d) * mag;
+          ty = (dy / d) * mag;
+        }
+      }
+
+      // LERP + DECAY로 부드러운 오프셋 적용
+      s.ox = s.ox * DECAY + (tx - s.ox) * LERP;
+      s.oy = s.oy * DECAY + (ty - s.oy) * LERP;
+
+      const rx = s.x + s.ox;
+      const ry = s.y + s.oy;
+
       ctx.beginPath();
-      ctx.arc(s.x, s.y, R, 0, Math.PI * 2);
+      ctx.arc(rx, ry, R, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
     }
 
+    // 스폰 타이밍
     nextSpawn -= dt;
     if (nextSpawn <= 0){
-      for (let i = 0; i < 3; i++) spawn(i > 0); // 군집으로 3개씩
+      for (let i = 0; i < 3; i++) spawn(i > 0); // 군집처럼 3개씩
       nextSpawn = 120 + Math.random() * 120;
     }
 
     requestAnimationFrame(drawFrame);
   }
 
-  // 초기화 & 시작
+  // ---- 시작 ----
   const ro = new ResizeObserver(fit);
   ro.observe(hero);
   fit();
-  for (let i = 0; i < 12; i++) spawn(false); // 시작시 가볍게 채워두기
+  for (let i = 0; i < 12; i++) spawn(false); // 초기 몇 개 채움
   requestAnimationFrame(drawFrame);
 })();
 </script>
+
 <script>
   // =====================================================
   // 데이터 작성 팁
