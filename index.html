@@ -96,13 +96,17 @@
 
     /* Lightbox mobile */
     @media (max-width: 640px){
-      .lightbox{align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
-      .lightbox .frame{width:100%;max-width:680px;border-radius:20px;overflow:hidden;background:#fff;height:auto;max-height:none}
-      .lb-body{display:block;overflow:visible}
-      .lb-media{background:#000;display:flex;justify-content:center;align-items:flex-start;padding:0}
-      .lb-media img{width:100%;height:auto;max-height:none;object-fit:contain}
-      .lb-aside{border-left:none;border-top:1px solid var(--line)}
-    }
+  .lightbox{align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
+  .lightbox .frame{width:100%;max-width:680px;border-radius:20px;overflow:hidden;background:#fff;height:auto;max-height:none}
+  .lb-body{display:block;overflow:visible}
+  .lb-media{background:#000;display:flex;justify-content:center;align-items:flex-start;padding:0}
+  .lb-media img{width:100%;height:auto;max-height:none;object-fit:contain}
+  .lb-aside{border-left:none;border-top:1px solid var(--line)}
+
+  /* 여기 두 줄 추가 —— 글을 위로, 캔버스 옅게 */
+  .hero{ position: relative; z-index: 1; }
+  #sporesCanvas{ opacity: .45; }
+}
   </style>
 </head>
 <body>
@@ -283,7 +287,7 @@
 
     function spawn(fromSeed){
       const rand = Math.random();
-  const isLeap  = rand < 0.28;           // 멀리 '뿅' 나타나는 예외
+  const isLeap  = rand < 0.35;           // 멀리 '뿅' 나타나는 예외
   const isBurst = !isLeap && rand < 0.50; // 기본보다 조금 멀리 퍼지는 군집
       if(!fromSeed){
         center.x += 0.12; // 우측
