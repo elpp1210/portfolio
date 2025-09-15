@@ -33,7 +33,12 @@
 
     /* Filters */
     .filters{display:flex;flex-direction:column;align-items:center;gap:14px;margin:28px 0 56px}
-    .filters-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .filters-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .filters-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;width:100%}
+    .filters-left,.filters-right{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    /* "전체"와 연도 간격 */
+    .year-filters .chip[data-action="reset"]{ margin-right:18px; }
+    @media (max-width:640px){ .year-filters .chip[data-action="reset"]{ margin-right:10px; } }
 
     .btn,.chip{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--text);padding:10px 14px;border-radius:999px;font-size:13px;line-height:1;display:inline-flex;gap:8px;align-items:center;cursor:pointer;transition:.16s ease;font-weight:200}
     .btn:hover,.chip:hover{border-color:#d6d8df;transform:translateY(-1px)}
@@ -116,28 +121,33 @@
   <main>
     <!-- Hero -->
     <section class="hero" aria-label="소개">
-      <br>
-      <br>
+      <br><br>
       <p>일반적으로 부정적으로 인식되는 곰팡이를 통해 시간과 부재, 감정의 잔재를 탐구한다. 곰팡이는 사람의 손길이 닿지 않는 곳에서 서서히 자라나며, 그 자체로 시간의 축적이자 사람의 흔적을 암시한다. 나는 이러한 곰팡이를 단순한 오염의 존재가 아닌 감정적 존재로 바라본다. 곰팡이의 유기적이고 번지는 특성을 가구나 조형물 형태로 구체화하며, 그것을 통해 보이지 않는 감정과 소외된 존재의 무게를 시각화한다. 각기 다른 형태로 표현된 곰팡이 형상은 감정과 잊혀진 기억들을 투영하는 장치로 기능한다.</p>
-    <br>
-      <br>
-      <br>
+      <br><br><br>
     </section>
  
     <!-- Filters -->
     <section aria-label="필터">
       <div class="filters" role="group" aria-label="작품 필터">
-        <div class="filters-row year-filters" aria-label="연도 필터">
-          <button class="chip" data-action="reset" aria-pressed="true">전체</button>
-          <button class="chip" data-filter-type="year" data-value="2022" aria-pressed="false">2022</button>
-          <button class="chip" data-filter-type="year" data-value="2023" aria-pressed="false">2023</button>
-          <button class="chip" data-filter-type="year" data-value="2024" aria-pressed="false">2024</button>
-          <button class="chip" data-filter-type="year" data-value="2025" aria-pressed="false">2025</button>
-        </div>
-        <div class="filters-row type-filters" aria-label="종류 필터">
-          <button class="chip" data-filter-type="type" data-value="furniture" aria-pressed="false">가구</button>
-          <button class="chip" data-filter-type="type" data-value="sculpture" aria-pressed="false">조형</button>
-          <button class="chip" data-filter-type="type" data-value="lighting" aria-pressed="false">조명</button>
+        <div class="filters-bar">
+          <!-- Left: 전체 + 연도 -->
+          <div class="filters-left" aria-label="왼쪽 필터 묶음">
+            <div class="filters-row year-filters" aria-label="연도 필터">
+              <button class="chip" data-action="reset" aria-pressed="true">전체</button>
+              <button class="chip" data-filter-type="year" data-value="2022" aria-pressed="false">2022</button>
+              <button class="chip" data-filter-type="year" data-value="2023" aria-pressed="false">2023</button>
+              <button class="chip" data-filter-type="year" data-value="2024" aria-pressed="false">2024</button>
+              <button class="chip" data-filter-type="year" data-value="2025" aria-pressed="false">2025</button>
+            </div>
+          </div>
+          <!-- Right: 종류 -->
+          <div class="filters-right" aria-label="오른쪽 필터 묶음">
+            <div class="filters-row type-filters" aria-label="종류 필터">
+              <button class="chip" data-filter-type="type" data-value="furniture" aria-pressed="false">가구</button>
+              <button class="chip" data-filter-type="type" data-value="sculpture" aria-pressed="false">조형</button>
+              <button class="chip" data-filter-type="type" data-value="lighting" aria-pressed="false">조명</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -322,7 +332,7 @@
   }
 ];
 
-  // id 자동 생성(없어도 됨) + 순서는 배열 순서대로 유지
+  // id 자동 생성(없어도 됨) + 연도 최신순 정렬
   const DATA = ITEMS
   .map((it, idx) => ({ id: (it.id == null ? (Date.now() + '-' + idx) : it.id), ...it }))
   .sort((a, b) => b.year - a.year);
