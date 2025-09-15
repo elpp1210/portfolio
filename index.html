@@ -254,7 +254,7 @@
   const RANDOM_ANGLE_P  = 0.12;  // 완전 랜덤 각도
   const REVERSE_P       = 0.05;  // 가끔 역방향 턴
   const ANGLE_JITTER    = 0.60;  // 기본 각 주변 흔들림 (라디안)
-  const MIN_DIST        = 14;    // 겹침 억제 (작을수록 더 뭉침)
+  const MIN_DIST        = 18;    // 겹침 억제 (작을수록 더 뭉침)
 
   // ---- 상태 ----
   let W = 0, H = 0;
@@ -268,7 +268,7 @@
   let spreadX = 30, spreadY = 20;
   let initialized = false;
 
-  let nextSpawn = 120 + Math.random() * 120;
+  let nextSpawn = 130 + Math.random() * 130;
   let last = performance.now();
 
   function fit(){
