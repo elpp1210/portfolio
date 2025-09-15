@@ -251,15 +251,15 @@
     new ResizeObserver(sizeCanvas).observe(cvs);
     window.addEventListener('resize', sizeCanvas);
 
-    const R = 4; // 모두 같은 크기
-    const STROKE = 'rgba(0,0,0,0.28)';
+    const R = 11; // 모두 같은 크기
+    const STROKE = 'rgba(0,0,0,0.25)';
     const FILL   = '#ffffff';
     const MAX_SPORES = 220;
     const spores = [];
 
     let W = cvs.getBoundingClientRect().width;
     let H = cvs.getBoundingClientRect().height;
-    let center = { x: 120, y: H*0.35 };
+    let center = { x: 80, y: H*0.75 };
     let spreadX = 30, spreadY = 20;
     let nextSpawn = 120 + Math.random()*120; // 속도 약간 빠르게
     let last = performance.now();
@@ -319,7 +319,16 @@
   // - 새 작품을 "맨 앞에" 추가하려면 ITEMS 배열의 맨 위에 객체를 붙이세요.
   // - id 번호는 더 이상 의미가 없습니다(없어도 자동 생성). 순서는 배열 순서대로 표시됩니다.
   // =====================================================
-
+function toWeserv(src, w, fmt='webp', q=75){
+  try {
+    const u = new URL(src);
+    const naked = u.host + u.pathname + (u.search || '');
+    return `https://images.weserv.nl/?url=ssl:${naked}&w=${w}&q=${q}&we=1&output=${fmt}`;
+  } catch(e){
+    const enc = encodeURIComponent(src);
+    return `https://images.weserv.nl/?url=${enc}&w=${w}&q=${q}&we=1&output=${fmt}`;
+  }
+}
   const grid = document.getElementById('grid');
   function label(t){ return ({furniture:'가구',lighting:'조명',sculpture:'조형'}[t]||t); }
 
@@ -472,7 +481,7 @@
 
     const fig=document.createElement('figure');
 
-    // <picture> + srcset/sizes로 자동 리사이즈 + 포맷 전환
+    // <picture> + srcset/sizes
     const picture = document.createElement('picture');
     const sizes = '(max-width:640px) 92vw, (max-width:1024px) 45vw, 30vw';
 
@@ -499,18 +508,16 @@
     img.decoding='async';
     img.loading='lazy';
     img.fetchPriority = (i < eagerCount ? 'high' : 'low');
-    // 고정된 intrinsic 비율(4:3)에 맞춘 힌트 값 (레이아웃 점프 줄이기)
+    // 레이아웃 점프 방지용 힌트
     img.width  = 1200;
     img.height = 900;
     img.setAttribute('sizes', sizes);
 
     if (i < eagerCount || !supportsIO) {
-      // 바로 보일 것들은 즉시 세팅
       s1.srcset = srcsetWebp;
       s2.srcset = srcsetJpg;
       img.src   = toWeserv(item.cover, 800, 'jpg', 78);
     } else {
-      // 아래에서 IO가 보일 때 실제 로드
       s1.dataset.srcset = srcsetWebp;
       s2.dataset.srcset = srcsetJpg;
       img.dataset.src   = toWeserv(item.cover, 800, 'jpg', 78);
@@ -534,9 +541,7 @@
 
     li.addEventListener('click',function(){ openLightbox(item); });
 
-    const delay = 30 + i*25;
-    setTimeout(function(){ li.classList.add('show'); }, delay);
-
+    setTimeout(function(){ li.classList.add('show'); }, 30 + i*25);
     frag.appendChild(li);
 
     if (supportsIO && i >= eagerCount) io.observe(picture);
@@ -544,12 +549,6 @@
 
   grid.appendChild(frag);
 }
-    if (supportsIO && lazyImgs.length){
-      lazyImgs.forEach(img=>io.observe(img));
-      // 안전망: 3초 뒤에도 트리거 안 오면 강제 로드
-      setTimeout(()=>{ lazyImgs.forEach(img=>{ if (img.dataset && img.dataset.src) { img.src = img.dataset.src; img.removeAttribute('data-src'); } }); }, 3000);
-    }
-  }
 
   // 초기 렌더
   render(DATA);
