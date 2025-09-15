@@ -238,16 +238,25 @@
   </div>
 </aside>
 <script>
-// ===== 좌측 얇은 원(스포어) 군집 애니메이션 — leap/burst 포함 =====
+// ===== Spores Canvas (더 강한 leap/burst + 초기 위치 고정) =====
 (function(){
-  const hero   = document.querySelector('main');         // 기준 영역
-  const canvas = document.getElementById('sporesCanvas');
-  if(!hero || !canvas) return;
+  const hero   = document.querySelector('main');          // 기준 영역
+  const canvas = document.getElementById('sporesCanvas'); // 반드시 존재해야 함
+  if (!hero || !canvas) return;
 
   const ctx = canvas.getContext('2d', { alpha: true });
   const dpr = Math.min(2, window.devicePixelRatio || 1);
 
-  // --- state (fit()보다 위에 선언!) ---
+  // ---- 튜닝 노브 (느낌 바꾸고 싶으면 여기만 조절) ----
+  const LEAP_P          = 0.70;  // 멀리 튀는 비율 ↑
+  const BURST_P         = 0.90;  // 넓게 퍼지는 군집 (LEAP 실패 시)
+  const SUPERLEAP_P     = 0.08;  // 아주 멀~리 점프
+  const RANDOM_ANGLE_P  = 0.12;  // 완전 랜덤 각도
+  const REVERSE_P       = 0.05;  // 가끔 역방향 턴
+  const ANGLE_JITTER    = 0.60;  // 기본 각 주변 흔들림 (라디안)
+  const MIN_DIST        = 14;    // 겹침 억제 (작을수록 더 뭉침)
+
+  // ---- 상태 ----
   let W = 0, H = 0;
   const spores = [];
   const MAX_SPORES = 600;
@@ -255,77 +264,90 @@
   const STROKE = 'rgba(0,0,0,0.28)';
   const FILL   = '#ffffff';
 
-  let center = { x: 80, y: 0 }; // y는 fit()에서 1회 세팅
+  let center = { x: 80, y: 0 };         // y는 fit() 때 1회 세팅
   let spreadX = 30, spreadY = 20;
   let initialized = false;
 
-  let nextSpawn = 120 + Math.random()*120;
+  let nextSpawn = 120 + Math.random() * 120;
   let last = performance.now();
 
   function fit(){
     const rect = hero.getBoundingClientRect();
 
-    // (옵션) 예전 감성: 필터 바닥 + 여유만큼만 높이 잡기
-    const filters   = document.querySelector('.filters');
-    const baseEnd   = 420;
-    const filtersEnd= filters ? (filters.getBoundingClientRect().bottom - rect.top) : baseEnd;
-    const bleed     = (window.innerWidth <= 640) ? 60 : 30;
+    // 필터 섹션 끝 + 여백 기준으로 캔버스 높이 계산 (예전 느낌 유지)
+    const filters    = document.querySelector('.filters');
+    const baseEnd    = 420; // 최소 높이
+    const filtersEnd = filters ? (filters.getBoundingClientRect().bottom - rect.top) : baseEnd;
+    const bleed      = (window.innerWidth <= 640) ? 60 : 30;
     H = Math.max(baseEnd, Math.ceil(filtersEnd + bleed));
-
     W = Math.floor(rect.width);
 
+    // 캔버스 리사이즈
     canvas.style.width  = W + 'px';
     canvas.style.height = H + 'px';
     canvas.width  = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
 
-    // 높이 결정된 뒤 '처음 한 번만' 중심 세팅
-    if (!initialized) {
+    // 처음 한 번만 중심 좌표 세팅 (리사이즈해도 y가 위로 밀리지 않게)
+    if (!initialized){
       const isMobile = window.innerWidth <= 640;
       center.x = isMobile ? 10 : 80;
-      center.y = isMobile ? H * 0.88 : H * 0.75;
+      center.y = isMobile ? H * 0.88 : H * 0.80; // 살짝 더 아래로
       initialized = true;
     }
-  } // ← fit() 닫힘
+  }
 
   function spawn(fromSeed){
-    // 진행 방향 랜덤 튐: leap/burst 모드
-    const rand    = Math.random();
-    const isLeap  = rand < 0.55;            // 멀리 '뿅'
-    const isBurst = !isLeap && rand < 0.80; // 넓게 퍼짐
+    // 모드 결정
+    const r = Math.random();
+    const isLeap      = r < LEAP_P;
+    const isBurst     = !isLeap && r < BURST_P;
+    const isSuperLeap = Math.random() < SUPERLEAP_P;
 
-    // 시드가 아닐 때만 중심/확산 갱신
+    // 시드가 아닐 때만 중심 이동/확산 증가
     if (!fromSeed){
-      center.x += 0.12; // 우측 살짝
-      center.y -= 0.05; // 위로 살짝
+      center.x += 0.12; // 우측
+      center.y -= 0.05; // 위 (너무 올라가면 아래로 되돌림)
+      if (center.y < H * 0.28) center.y = H * 0.28; // 상단 과상승 방지
+
       spreadX = Math.min(spreadX + 0.95, W * 0.95);
       spreadY = Math.min(spreadY + 0.65, H * 0.65);
     }
 
-    // 기본 진행각(우상향), 가끔 완전 랜덤
-    const baseAngle = -Math.PI / 4;
-    const angle = (Math.random() < 0.10)
-      ? Math.random() * Math.PI * 2
-      : baseAngle + (Math.random()-0.5) * 0.28;
+    // 기본 각: 우상향(-45°) / 가끔 랜덤 / 가끔 역방향
+    let angle;
+    if (Math.random() < RANDOM_ANGLE_P) {
+      angle = Math.random() * Math.PI * 2;
+    } else {
+      angle = -Math.PI/4 + (Math.random() - 0.5) * ANGLE_JITTER;
+      if (Math.random() < REVERSE_P) angle += Math.PI;
+    }
 
-    const minDist = 16; // 과도한 겹침 방지(일부 허용)
+    // 분포 파라미터: pow 작을수록 먼 거리로 치우침
+    const pow   = isSuperLeap ? 0.18 : (isLeap ? 0.28 : (isBurst ? 0.45 : 0.60));
+    const multX = isSuperLeap ? (3.2 + Math.random()*1.4)
+              : isLeap       ? (2.4 + Math.random()*1.2)
+              : isBurst      ? (1.7 + Math.random()*1.0)
+                             : 1.0;
+    const multY = isSuperLeap ? (2.4 + Math.random()*1.2)
+              : isLeap       ? (1.8 + Math.random()*1.0)
+              : isBurst      ? (1.3 + Math.random()*0.7)
+                             : 1.0;
+
+    const min2 = MIN_DIST * MIN_DIST * 0.6;
+
     let x, y, ok = false;
-
-    for (let tries = 0; tries < 20 && !ok; tries++){
-      const pow   = isLeap ? 0.35 : (isBurst ? 0.50 : 0.60);
-      const multX = isLeap ? (2.2 + Math.random()*1.1)
-                           : (isBurst ? (1.6 + Math.random()*0.9) : 1.0);
-      const multY = isLeap ? (1.6 + Math.random()*0.9)
-                           : (isBurst ? (1.2 + Math.random()*0.6) : 1.0);
-
+    for (let tries = 0; tries < 24 && !ok; tries++){
       const distX = Math.pow(Math.random(), pow) * spreadX * multX;
       const distY = Math.pow(Math.random(), pow) * spreadY * multY;
-
       x = center.x + Math.cos(angle) * distX;
       y = center.y + Math.sin(angle) * distY;
 
-      ok = spores.every(s => ((s.x - x) ** 2 + (s.y - y) ** 2) > (minDist * minDist * 0.6));
+      // 화면 밖으로 과하게 나가면 재시도(아주 살짝은 허용)
+      if (x < -50 || x > W + 50 || y < -50 || y > H + 50) continue;
+
+      ok = spores.every(s => ((s.x - x) ** 2 + (s.y - y) ** 2) > min2);
     }
 
     if (ok){
@@ -344,25 +366,25 @@
 
     for (const s of spores){
       ctx.beginPath();
-      ctx.arc(s.x, s.y, R, 0, Math.PI*2);
+      ctx.arc(s.x, s.y, R, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
     }
 
     nextSpawn -= dt;
     if (nextSpawn <= 0){
-      for (let i=0;i<3;i++) spawn(i>0); // 군집 느낌으로 3개씩
-      nextSpawn = 120 + Math.random()*120;
+      for (let i = 0; i < 3; i++) spawn(i > 0); // 군집으로 3개씩
+      nextSpawn = 120 + Math.random() * 120;
     }
 
     requestAnimationFrame(drawFrame);
   }
 
-  // 초기화
+  // 초기화 & 시작
   const ro = new ResizeObserver(fit);
   ro.observe(hero);
   fit();
-  for (let i=0;i<12;i++) spawn(false); // 시작 시 약간 채우기
+  for (let i = 0; i < 12; i++) spawn(false); // 시작시 가볍게 채워두기
   requestAnimationFrame(drawFrame);
 })();
 </script>
