@@ -32,8 +32,17 @@
     .hero p{margin:0;color:var(--muted);font-size:16px;line-height:1.9;max-width:820px}
 
     /* Spores canvas */
-    #sporesCanvas{ position:absolute; left:0; top:0; width:100%; height:420px; pointer-events:none; z-index:0; }
-    .filters{ position:relative; z-index:1; }
+    #sporesCanvas{
+  position:absolute;
+  top:0;
+  left:-20px;   /* 컨텐츠 패딩만큼 확장 */
+  right:-20px;  /* 컨텐츠 패딩만큼 확장 */
+  width:auto;   /* right 사용 → width:auto */
+  height:420px; /* 초기값 (JS에서 덮어씀) */
+  pointer-events:none;
+  z-index:0;
+}
+.filters{ position:relative; z-index:1; }
 
     /* Filters */
     .filters{display:flex;flex-direction:column;align-items:center;gap:14px;margin:28px 0 56px}
@@ -105,7 +114,7 @@
 
   /* 여기 두 줄 추가 —— 글을 위로, 캔버스 옅게 */
   .hero{ position: relative; z-index: 1; }
-  #sporesCanvas{ opacity: .90; }
+  #sporesCanvas{ opacity: .95; }
 }
   </style>
 </head>
@@ -246,11 +255,37 @@
     const DPR = Math.min(2, window.devicePixelRatio||1);
 
     function sizeCanvas(){
-      const r = cvs.getBoundingClientRect();
-      cvs.width  = Math.max(1, Math.floor(r.width  * DPR));
-      cvs.height = Math.max(1, Math.floor(r.height * DPR));
-      ctx.setTransform(DPR,0,0,DPR,0,0);
-    }
+  const main    = document.querySelector('main');
+  const filters = document.querySelector('.filters');
+  const mrect   = main.getBoundingClientRect();
+
+  // 캔버스를 hero만이 아니라 filters 바닥까지 덮도록 높이 계산
+  const baseEnd = 420; // 최소 높이
+  const filtersEnd = filters
+    ? (filters.getBoundingClientRect().bottom - mrect.top)
+    : baseEnd;
+
+  // 모바일은 조금 더 여유(bleed) 주기
+  const bleed = (window.innerWidth <= 640) ? 60 : 30;
+  const Hcss  = Math.max(baseEnd, Math.ceil(filtersEnd + bleed));
+
+  // 좌우 -20px씩 뻗었으니 실제 너비는 본문 + 40
+  const Wcss  = Math.ceil(mrect.width + 40);
+
+  // CSS 크기
+  cvs.style.height = Hcss + 'px';
+  // width는 left/right로 결정되니 굳이 설정 안 해도 되지만,
+  // 캔버스의 내부 해상도는 아래에서 맞춰줌.
+
+  // 캔버스 픽셀 해상도
+  cvs.width  = Math.max(1, Math.floor(Wcss * DPR));
+  cvs.height = Math.max(1, Math.floor(Hcss * DPR));
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+
+  // 그리기용 W/H 갱신 (아래 코드에서 참조)
+  W = Wcss;
+  H = Hcss;
+}
     sizeCanvas();
     new ResizeObserver(sizeCanvas).observe(cvs);
     window.addEventListener('resize', sizeCanvas);
