@@ -235,8 +235,8 @@
 <script>
 // ===== 좌측 얇은 원(스포어) 군집 애니메이션 — leap/burst 포함 =====
 (function(){
-  const hero = document.querySelector('.hero');
-  const canvas = document.getElementById('spores');
+  const hero = document.querySelector('main');        
+const canvas = document.getElementById('sporesCanvas'); 
   if(!hero || !canvas) return;
 
   const ctx = canvas.getContext('2d', { alpha: true });
