@@ -132,7 +132,7 @@
     <!-- Hero -->
     <section class="hero" aria-label="소개">
       <br><br>
-      <p>일반적으로 부정적으로 인식되는 곰팡이를 통해 시간과 부재, 감정의 잔재를 탐구한다. 곰팡이는 사람의 손길이 닿지 않는 곳에서 서서히 자라나며, 그 자체로 시간의 축적이자 사람의 흔적을 암시한다. 나는 이러한 곰팡이를 단순한 오염의 존재가 아닌 감정적 존재로 바라본다. 곰팡이의 유기적이고 번지는 특성을 가구나 조형물 형태로 구체화하며, 그것을 통해 보이지 않는 감정과 소외된 존재의 무게를 시각화한다. 각기 다른 형태로 표현된 곰팡이 형상은 감정과 잊혀진 기억들을 투영하는 장치로 기능한다.</p>
+      <p>곰팡이는 흔히 부정적으로 인식되지만, 나에게는 시간과 부재, 감정의 잔재를 드러내는 매개체다. 사람의 손길이 닿지 않는 구석에서 서서히 번져나가는 곰팡이는 그 자체로 시간의 축적이자, 잊힌 흔적을 암시한다. 나는 곰팡이를 단순한 오염이 아닌 감정적 존재로<br/>바라보며, 그 유기적이고 번지는 성질을 조형물로 구체화한다. 이를 통해 눈에 보이지 않는 감정과 드러나지 않는 존재의 무게를<br/>시각화하고자 한다. 각기 다른 형태로 표현된 곰팡이의 형상은 잊힌 기억과 내면의 감정을 투영하는 장치로 기능한다.</p>
       <br><br><br>
     </section>
  
@@ -238,7 +238,7 @@
   </div>
 </aside>
 <script>
-// ===== Spores Canvas (마우스 회피 반응 포함, 반경/밀려남 상향) =====
+// ===== Spores Canvas (마우스 회피 + 스파이크 원, len 3~6) =====
 (function(){
   const hero   = document.querySelector('main');
   const canvas = document.getElementById('sporesCanvas');
@@ -247,29 +247,72 @@
   const ctx = canvas.getContext('2d', { alpha: true });
   const dpr = Math.min(2, window.devicePixelRatio || 1);
 
-  // ---- 튜닝 노브 ----
-  const LEAP_P          = 0.70;  // 멀리 튀는 확률
-  const BURST_P         = 0.90;  // 넓게 퍼지는 군집 (LEAP 실패 시)
-  const SUPERLEAP_P     = 0.08;  // 아주 멀리 점프
-  const RANDOM_ANGLE_P  = 0.12;  // 완전 랜덤 각도
-  const REVERSE_P       = 0.05;  // 가끔 역방향
-  const ANGLE_JITTER    = 0.60;  // 기본 각 주변 흔들림(라디안)
-  const MIN_DIST        = 18;    // 원들끼리 최소 거리(겹침 억제)
+  // ── 포자 가시 원 그리기 헬퍼 ───────────────────────────────
+  function drawSpikyCircle(ctx, cx, cy, r, t, opts = {}){
+    const spikes      = opts.spikes      ?? 16;                     // 가시 개수
+    const lenMin      = opts.lenMin      ?? 3;                      // 최소 길이
+    const lenMax      = opts.lenMax      ?? 6;                      // 최대 길이
+    const wobble      = opts.wobble      ?? 1;                      // 1이면 정확히 [lenMin,lenMax]
+    const thickness   = opts.thickness   ?? 1.0;                    // 가시 선 두께
+    const color       = opts.color       ?? 'rgba(0,0,0,0.32)';     // 가시 선색
+    const edge        = opts.edge        ?? '#ffffff';              // 몸통 색
+    const borderColor = opts.borderColor ?? 'rgba(0,0,0,0.28)';     // 바깥 테두리
 
-  // ---- 마우스 회피 파라미터 (요청값 반영) ----
+    // 몸통
+    ctx.fillStyle = edge;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fill();
+
+    // 가시
+    ctx.lineWidth   = thickness;
+    ctx.strokeStyle = color;
+    const TWO_PI = Math.PI*2;
+    for(let i=0;i<spikes;i++){
+      const a   = (i/spikes)*TWO_PI;
+      const raw = Math.sin(a*3.1 + t*0.002 + i*0.7)*0.5 + 0.5; // 0..1
+      const mix = 0.5 + (raw - 0.5) * wobble;                  // wobble=1 → 0..1
+      const L   = lenMin + (lenMax - lenMin) * mix;            // 정확히 [lenMin, lenMax]
+
+      const x1 = cx + Math.cos(a)*r;
+      const y1 = cy + Math.sin(a)*r;
+      const x2 = cx + Math.cos(a)*(r+L);
+      const y2 = cy + Math.sin(a)*(r+L);
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2,y2);
+      ctx.stroke();
+    }
+
+    // 몸통 외곽선
+    ctx.lineWidth   = 1;
+    ctx.strokeStyle = borderColor;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.stroke();
+  }
+
+  // ── 튜닝 노브 ──────────────────────────────────────────────
+  const LEAP_P          = 0.70;
+  const BURST_P         = 0.90;
+  const SUPERLEAP_P     = 0.08;
+  const RANDOM_ANGLE_P  = 0.12;
+  const REVERSE_P       = 0.05;
+  const ANGLE_JITTER    = 0.60;
+  const MIN_DIST        = 18;
+
+  // 마우스 회피 파라미터 (상향)
   const IS_MOBILE    = () => window.innerWidth <= 640;
-  const MOUSE_RADIUS = () => IS_MOBILE() ? 140 : 200;  // 영향 반경 ↑
-  const MAX_PUSH     = () => IS_MOBILE() ? 36  : 60;   // 최대 밀려남 거리 ↑
-  const LERP         = 0.18;                           // 따라가는 속도 (0~1)
-  const DECAY        = 0.90;                           // 잔상 감쇠 (1에 가까울수록 길게 남음)
+  const MOUSE_RADIUS = () => IS_MOBILE() ? 140 : 200;
+  const MAX_PUSH     = () => IS_MOBILE() ? 36  : 60;
+  const LERP         = 0.18;
+  const DECAY        = 0.90;
 
-  // ---- 상태 ----
+  // ── 상태 ───────────────────────────────────────────────────
   let W = 0, H = 0;
   const spores = [];
   const MAX_SPORES = 600;
   const R = 11;
-  const STROKE = 'rgba(0,0,0,0.28)';
-  const FILL   = '#ffffff';
 
   let center = { x: 80, y: 0 };
   let spreadX = 30, spreadY = 20;
@@ -278,7 +321,7 @@
   let nextSpawn = 130 + Math.random() * 130;
   let last = performance.now();
 
-  // ---- 마우스 좌표(캔버스 기준) ----
+  // 마우스 좌표
   const mouse = { x: Infinity, y: Infinity, active: false };
   function updateMouse(e){
     const rect = canvas.getBoundingClientRect();
@@ -290,11 +333,11 @@
   hero.addEventListener('pointerenter', updateMouse, {passive:true});
   hero.addEventListener('pointerleave', ()=>{ mouse.active = false; }, {passive:true});
 
-  // ---- 리사이즈 & 초기 중심 세팅 ----
+  // 리사이즈
   function fit(){
     const rect = hero.getBoundingClientRect();
     const filters    = document.querySelector('.filters');
-    const baseEnd    = 420; // 최소 높이
+    const baseEnd    = 420;
     const filtersEnd = filters ? (filters.getBoundingClientRect().bottom - rect.top) : baseEnd;
     const bleed      = IS_MOBILE() ? 60 : 30;
 
@@ -314,7 +357,7 @@
     }
   }
 
-  // ---- 스포어 스폰 ----
+  // 스폰
   function spawn(fromSeed){
     const r = Math.random();
     const isLeap      = r < LEAP_P;
@@ -322,15 +365,13 @@
     const isSuperLeap = Math.random() < SUPERLEAP_P;
 
     if (!fromSeed){
-      center.x += 0.12;                // 우측 이동
-      center.y -= 0.05;                // 천천히 위로
+      center.x += 0.12;
+      center.y -= 0.05;
       if (center.y < H * 0.28) center.y = H * 0.28;
-
       spreadX = Math.min(spreadX + 0.95, W * 0.95);
       spreadY = Math.min(spreadY + 0.65, H * 0.65);
     }
 
-    // 기본 각: 우상향(-45°) / 가끔 랜덤 / 가끔 역방향
     let angle;
     if (Math.random() < RANDOM_ANGLE_P) {
       angle = Math.random() * Math.PI * 2;
@@ -339,7 +380,6 @@
       if (Math.random() < REVERSE_P) angle += Math.PI;
     }
 
-    // 분포 파라미터: pow 낮을수록 먼 거리로 치우침
     const pow   = isSuperLeap ? 0.18 : (isLeap ? 0.28 : (isBurst ? 0.45 : 0.60));
     const multX = isSuperLeap ? (3.2 + Math.random()*1.4)
               : isLeap       ? (2.4 + Math.random()*1.2)
@@ -358,76 +398,71 @@
       const distY = Math.pow(Math.random(), pow) * spreadY * multY;
       x = center.x + Math.cos(angle) * distX;
       y = center.y + Math.sin(angle) * distY;
-
-      // 화면 밖 과도 이탈 방지(살짝은 허용)
       if (x < -50 || x > W + 50 || y < -50 || y > H + 50) continue;
-
       ok = spores.every(s => ((s.x - x) ** 2 + (s.y - y) ** 2) > min2);
     }
 
     if (ok){
-      // 회피 오프셋 저장용 (ox, oy)
       spores.push({ x, y, ox: 0, oy: 0 });
       if (spores.length > MAX_SPORES) spores.shift();
     }
   }
 
-  // ---- 프레임 드로우 ----
+  // 드로우
   function drawFrame(now){
     const dt = Math.min(48, now - last); last = now;
     ctx.clearRect(0,0,W,H);
-
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = STROKE;
-    ctx.fillStyle   = FILL;
 
     const rad  = MOUSE_RADIUS();
     const push = MAX_PUSH();
 
     for (const s of spores){
-      // 마우스 회피 목표 오프셋
+      // 마우스 회피
       let tx = 0, ty = 0;
       if (mouse.active){
         const dx = s.x - mouse.x;
         const dy = s.y - mouse.y;
         const d  = Math.hypot(dx, dy);
         if (d > 0 && d < rad){
-          // 가까울수록 더 세게 밀림 (f^2 감쇠)
           const f = (1 - d / rad);
           const mag = push * f * f;
           tx = (dx / d) * mag;
           ty = (dy / d) * mag;
         }
       }
-
-      // LERP + DECAY로 부드러운 오프셋 적용
       s.ox = s.ox * DECAY + (tx - s.ox) * LERP;
       s.oy = s.oy * DECAY + (ty - s.oy) * LERP;
 
       const rx = s.x + s.ox;
       const ry = s.y + s.oy;
 
-      ctx.beginPath();
-      ctx.arc(rx, ry, R, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+      // 스파이크 원
+      drawSpikyCircle(ctx, rx, ry, R, now, {
+        spikes: 22,
+        lenMin: 3,            // ← 최소 3px
+        lenMax: 4,            // ← 최대 6px
+        wobble: 1,            // ← 전체 범위 사용
+        thickness: 0.7,
+        color: 'rgba(0,0,0,0.32)',
+        borderColor: 'rgba(0,0,0,0.28)',
+        edge:  '#ffffff'
+      });
     }
 
     // 스폰 타이밍
     nextSpawn -= dt;
     if (nextSpawn <= 0){
-      for (let i = 0; i < 3; i++) spawn(i > 0); // 군집처럼 3개씩
+      for (let i = 0; i < 3; i++) spawn(i > 0);
       nextSpawn = 120 + Math.random() * 120;
     }
-
     requestAnimationFrame(drawFrame);
   }
 
-  // ---- 시작 ----
+  // 시작
   const ro = new ResizeObserver(fit);
   ro.observe(hero);
   fit();
-  for (let i = 0; i < 12; i++) spawn(false); // 초기 몇 개 채움
+  for (let i = 0; i < 12; i++) spawn(false);
   requestAnimationFrame(drawFrame);
 })();
 </script>
