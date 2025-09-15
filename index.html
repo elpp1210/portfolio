@@ -232,86 +232,127 @@
     <a class="btn" href="#contact">Contact</a>
   </div>
 </aside>
-
 <script>
-  // ====== Spores Canvas (cluster, equal size discs) ======
-  (function(){
-    const cvs = document.getElementById('sporesCanvas');
-    if(!cvs) return;
-    const ctx = cvs.getContext('2d', { alpha:true });
-    const DPR = Math.min(2, window.devicePixelRatio||1);
+// ===== 좌측 얇은 원(스포어) 군집 애니메이션 — leap/burst 포함 =====
+(function(){
+  const hero = document.querySelector('.hero');
+  const canvas = document.getElementById('spores');
+  if(!hero || !canvas) return;
 
-    function sizeCanvas(){
-      const r = cvs.getBoundingClientRect();
-      cvs.width  = Math.max(1, Math.floor(r.width  * DPR));
-      cvs.height = Math.max(1, Math.floor(r.height * DPR));
-      ctx.setTransform(DPR,0,0,DPR,0,0);
-    }
-    sizeCanvas();
-    new ResizeObserver(sizeCanvas).observe(cvs);
-    window.addEventListener('resize', sizeCanvas);
+  const ctx = canvas.getContext('2d', { alpha: true });
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  let W = 0, H = 0;
 
-    const R = 11; // 모두 같은 크기
-    const STROKE = 'rgba(0,0,0,0.25)';
-    const FILL   = '#ffffff';
-    const MAX_SPORES = 220;
-    const spores = [];
+  function fit(){
+    const rect = hero.getBoundingClientRect();
+    W = Math.floor(rect.width);
+    H = Math.floor(rect.height);
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    canvas.width  = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
 
-    let W = cvs.getBoundingClientRect().width;
-    let H = cvs.getBoundingClientRect().height;
-    let center = { x: 80, y: H*0.75 };
-    let spreadX = 30, spreadY = 20;
-    let nextSpawn = 120 + Math.random()*120; // 속도 약간 빠르게
-    let last = performance.now();
+  // 상태값
+  const spores = [];
+  const MAX_SPORES = 600;     // 최대 개수
+  const R = 11;                // 원 반지름 (얇은 느낌 유지)
+  const STROKE = 'rgba(0,0,0,0.28)';
+  const FILL   = '#ffffff';
 
-    function draw(now){
-      const dt = Math.min(48, now - last); last = now;
-      ctx.clearRect(0,0,cvs.width/DPR,cvs.height/DPR);
+  // 진행 중심과 확산값
+  let center = { x: 80, y: H * 0.75 };
+  let spreadX = 30, spreadY = 20;
 
-      ctx.lineWidth = 1; ctx.strokeStyle = STROKE; ctx.fillStyle = FILL;
-      for(const s of spores){
-        ctx.beginPath(); ctx.arc(s.x, s.y, R, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-      }
+  // 모바일 초기 시작점 살짝 더 왼쪽/아래
+  if (window.innerWidth <= 640) {
+    center.x = 10;
+    center.y = H * 0.88;
+  }
 
-      nextSpawn -= dt;
-      if(nextSpawn <= 0){
-        for(let i=0;i<3;i++) spawn(i>0); // 군집으로 3개씩
-        nextSpawn = 120 + Math.random()*120;
-      }
-      requestAnimationFrame(draw);
-    }
+  // 스폰 타이밍
+  let nextSpawn = 120 + Math.random()*120;
+  let last = performance.now();
 
-    function spawn(fromSeed){
-      if(!fromSeed){
-        center.x += 0.12; // 우측
-        center.y -= 0.05; // 위쪽
-        spreadX = Math.min(spreadX + 0.95, W * 0.36);
-        spreadY = Math.min(spreadY + 0.65, H * 0.32);
-      }
-      const baseAngle = -Math.PI/4; // 우상향
-      const angle = (Math.random()<0.10)
-        ? Math.random()*Math.PI*2
-        : baseAngle + (Math.random()-0.5)*0.28;
+  function drawFrame(now){
+    const dt = Math.min(48, now - last); last = now;
 
-      const rect = cvs.getBoundingClientRect(); W = rect.width; H = rect.height;
+    // 캔버스 클리어
+    ctx.clearRect(0,0,W,H);
 
-      const minDist = 16; // 같은 자리 중복 방지(겹침 일부 허용)
-      let x,y,ok=false;
-      for(let tries=0; tries<20 && !ok; tries++){
-        const distX = Math.pow(Math.random(), 0.6) * spreadX;
-        const distY = Math.pow(Math.random(), 0.6) * spreadY;
-        x = center.x + Math.cos(angle) * distX;
-        y = center.y + Math.sin(angle) * distY;
-        ok = spores.every(s => ((s.x-x)**2 + (s.y-y)**2) > (minDist*minDist*0.6));
-      }
-      if(ok){
-        spores.push({x,y});
-        if(spores.length > MAX_SPORES) spores.shift();
-      }
+    // 그리기
+    ctx.lineWidth = 1; ctx.strokeStyle = STROKE; ctx.fillStyle = FILL;
+    for (const s of spores){
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, R, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
     }
 
-    requestAnimationFrame(draw);
-  })();
+    // 스폰 타이머
+    nextSpawn -= dt;
+    if (nextSpawn <= 0){
+      for (let i=0;i<3;i++) spawn(i>0);   // 군집 느낌으로 3개씩
+      nextSpawn = 120 + Math.random()*120;
+    }
+
+    requestAnimationFrame(drawFrame);
+  }
+
+  function spawn(fromSeed){
+    // 진행 방향 랜덤 튐: leap/burst 모드
+    const rand    = Math.random();
+    const isLeap  = rand < 0.55;              // 멀리 '뿅'
+    const isBurst = !isLeap && rand < 0.80;   // 넓게 퍼짐
+
+    // 중심점/확산 업데이트(시드가 아닐 때만)
+    if (!fromSeed){
+      center.x += 0.12; // 우측으로 살짝
+      center.y -= 0.05; // 위로 살짝
+      spreadX = Math.min(spreadX + 0.95, W * 0.95);
+      spreadY = Math.min(spreadY + 0.65, H * 0.65);
+    }
+
+    // 기본 진행각: 우상향(-45도) 주변, 가끔 완전 랜덤
+    const baseAngle = -Math.PI/4;
+    const angle = (Math.random() < 0.10)
+      ? Math.random() * Math.PI * 2
+      : baseAngle + (Math.random()-0.5) * 0.28;
+
+    const minDist = 16; // 과도한 겹침 방지(일부 겹침 허용)
+    let x, y, ok = false;
+
+    for (let tries = 0; tries < 20 && !ok; tries++){
+      const pow   = isLeap ? 0.35 : (isBurst ? 0.50 : 0.60);
+      const multX = isLeap ? (2.2 + Math.random()*1.1)
+                           : (isBurst ? (1.6 + Math.random()*0.9) : 1.0);
+      const multY = isLeap ? (1.6 + Math.random()*0.9)
+                           : (isBurst ? (1.2 + Math.random()*0.6) : 1.0);
+
+      const distX = Math.pow(Math.random(), pow) * spreadX * multX;
+      const distY = Math.pow(Math.random(), pow) * spreadY * multY;
+
+      x = center.x + Math.cos(angle) * distX;
+      y = center.y + Math.sin(angle) * distY;
+
+      ok = spores.every(s => ((s.x - x) ** 2 + (s.y - y) ** 2) > (minDist * minDist * 0.6));
+    }
+
+    if (ok){
+      spores.push({ x, y });
+      if (spores.length > MAX_SPORES) spores.shift();
+    }
+  }
+
+  // 초기화
+  const ro = new ResizeObserver(()=>{ fit(); });
+  ro.observe(hero);
+  fit();
+  // 시작시 약간 채워두기
+  for (let i=0;i<12;i++) spawn(false);
+
+  requestAnimationFrame(drawFrame);
+})();
 </script>
 <script>
   // =====================================================
