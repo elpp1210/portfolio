@@ -251,7 +251,7 @@
     new ResizeObserver(sizeCanvas).observe(cvs);
     window.addEventListener('resize', sizeCanvas);
 
-    const R = 10; // 모두 같은 크기
+    const R = 11; // 모두 같은 크기
     const STROKE = 'rgba(0,0,0,0.25)';
     const FILL   = '#ffffff';
     const MAX_SPORES = 220;
@@ -259,7 +259,7 @@
 
     let W = cvs.getBoundingClientRect().width;
     let H = cvs.getBoundingClientRect().height;
-    let center = { x: 80, y: H*0.60 };
+    let center = { x: 80, y: H*0.75 };
     let spreadX = 30, spreadY = 20;
     let nextSpawn = 120 + Math.random()*120; // 속도 약간 빠르게
     let last = performance.now();
@@ -298,8 +298,11 @@
       const minDist = 16; // 같은 자리 중복 방지(겹침 일부 허용)
       let x,y,ok=false;
       for(let tries=0; tries<20 && !ok; tries++){
-        const distX = Math.pow(Math.random(), 0.6) * spreadX;
-        const distY = Math.pow(Math.random(), 0.6) * spreadY;
+        const pow   = isLeap ? 0.35 : (isBurst ? 0.5 : 0.6);
+const multX = isLeap ? (1.6 + Math.random()*0.9) : (isBurst ? (1.2 + Math.random()*0.6) : 1);
+const multY = isLeap ? (1.6 + Math.random()*0.9) : (isBurst ? (1.2 + Math.random()*0.6) : 1);
+const distX = Math.pow(Math.random(), pow) * spreadX * multX;
+const distY = Math.pow(Math.random(), pow) * spreadY * multY;
         x = center.x + Math.cos(angle) * distX;
         y = center.y + Math.sin(angle) * distY;
         ok = spores.every(s => ((s.x-x)**2 + (s.y-y)**2) > (minDist*minDist*0.6));
