@@ -245,121 +245,128 @@
     <a class="btn" href="#contact">Contact</a>
   </div>
 </aside>
-
 <script>
-  // ====== Spores Canvas (cluster, equal size discs) ======
-  (function(){
-    const cvs = document.getElementById('sporesCanvas');
-    if(!cvs) return;
-    const ctx = cvs.getContext('2d', { alpha:true });
-    const DPR = Math.min(2, window.devicePixelRatio||1);
+// ====== Spores Canvas (cluster, equal size discs) ======
+(function(){
+  const cvs = document.getElementById('sporesCanvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d', { alpha:true });
+  const DPR = Math.min(2, window.devicePixelRatio||1);
 
-    function sizeCanvas(){
-  const main    = document.querySelector('main');
-  const filters = document.querySelector('.filters');
-  const mrect   = main.getBoundingClientRect();
+  // ✔ sizeCanvas()에서 쓸 W/H를 먼저 선언 (TDZ 오류 방지)
+  let W = 0, H = 0;
 
-  // 캔버스를 hero만이 아니라 filters 바닥까지 덮도록 높이 계산
-  const baseEnd = 420; // 최소 높이
-  const filtersEnd = filters
-    ? (filters.getBoundingClientRect().bottom - mrect.top)
-    : baseEnd;
+  function sizeCanvas(){
+    const main    = document.querySelector('main');
+    const filters = document.querySelector('.filters');
+    const mrect   = main.getBoundingClientRect();
 
-  // 모바일은 조금 더 여유(bleed) 주기
-  const bleed = (window.innerWidth <= 640) ? 60 : 30;
-  const Hcss  = Math.max(baseEnd, Math.ceil(filtersEnd + bleed));
+    // hero 뿐 아니라 filters 바닥까지 덮도록 높이 계산
+    const baseEnd    = 420; // 최소 높이
+    const filtersEnd = filters ? (filters.getBoundingClientRect().bottom - mrect.top) : baseEnd;
 
-  // 좌우 -20px씩 뻗었으니 실제 너비는 본문 + 40
-  const Wcss  = Math.ceil(mrect.width + 40);
+    // 모바일은 여유(bleed) 더 주기
+    const bleed = (window.innerWidth <= 640) ? 60 : 30;
+    const Hcss  = Math.max(baseEnd, Math.ceil(filtersEnd + bleed));
 
-  // CSS 크기
-  cvs.style.height = Hcss + 'px';
-  // width는 left/right로 결정되니 굳이 설정 안 해도 되지만,
-  // 캔버스의 내부 해상도는 아래에서 맞춰줌.
+    // 좌우 -20px씩 뻗었으니 실제 너비는 본문 + 40
+    const Wcss  = Math.ceil(mrect.width + 40);
 
-  // 캔버스 픽셀 해상도
-  cvs.width  = Math.max(1, Math.floor(Wcss * DPR));
-  cvs.height = Math.max(1, Math.floor(Hcss * DPR));
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+    // CSS 크기/픽셀 해상도 세팅
+    cvs.style.height = Hcss + 'px'; // width는 left/right로 결정됨
+    cvs.width  = Math.max(1, Math.floor(Wcss * DPR));
+    cvs.height = Math.max(1, Math.floor(Hcss * DPR));
+    ctx.setTransform(DPR,0,0,DPR,0,0);
 
-  // 그리기용 W/H 갱신 (아래 코드에서 참조)
-  W = Wcss;
-  H = Hcss;
-}
-    sizeCanvas();
-    new ResizeObserver(sizeCanvas).observe(cvs);
-    window.addEventListener('resize', sizeCanvas);
+    // 그리기용 W/H 갱신
+    W = Wcss;
+    H = Hcss;
+  }
+  sizeCanvas();
+  new ResizeObserver(sizeCanvas).observe(cvs);
+  window.addEventListener('resize', sizeCanvas);
 
-    const R = 11; // 모두 같은 크기
-    const STROKE = 'rgba(0,0,0,0.25)';
-    const FILL   = '#ffffff';
-    const MAX_SPORES = 600;
-    const spores = [];
-    let W = 0, H = 0;
-    let center = { x: 80, y: H*0.75 };
-    if (window.innerWidth <= 640) {
-   center.x = 20;   // 왼쪽으로 더 붙임
-  center.y = H * 1.1;  // 아래쪽으로
-}
-    let spreadX = 30, spreadY = 20;
-    let nextSpawn = 120 + Math.random()*120; // 속도 약간 빠르게
-    let last = performance.now();
+  const R = 11; // 모두 같은 크기
+  const STROKE = 'rgba(0,0,0,0.25)';
+  const FILL   = '#ffffff';
+  const MAX_SPORES = 600; // 최대 개수 확장
+  const spores = [];
 
-    function draw(now){
-      const dt = Math.min(48, now - last); last = now;
-      ctx.clearRect(0,0,cvs.width/DPR,cvs.height/DPR);
+  // 시작 중심점 (모바일은 더 왼쪽/아래에서 시작)
+  let center = { x: 80, y: H * 0.75 };
+  if (window.innerWidth <= 640) {
+    center.x = 10;       // 왼쪽 가장자리 쪽
+    center.y = H * 0.88; // 화면 안쪽에서 살짝 아래
+  }
 
-      ctx.lineWidth = 1; ctx.strokeStyle = STROKE; ctx.fillStyle = FILL;
-      for(const s of spores){
-        ctx.beginPath(); ctx.arc(s.x, s.y, R, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-      }
+  let spreadX = 30, spreadY = 20;
+  let nextSpawn = 120 + Math.random() * 120; // 스폰 간격
+  let last = performance.now();
 
-      nextSpawn -= dt;
-      if(nextSpawn <= 0){
-        for(let i=0;i<3;i++) spawn(i>0); // 군집으로 3개씩
-        nextSpawn = 120 + Math.random()*120;
-      }
-      requestAnimationFrame(draw);
+  function draw(now){
+    const dt = Math.min(48, now - last); last = now;
+    ctx.clearRect(0,0,cvs.width/DPR,cvs.height/DPR);
+
+    ctx.lineWidth = 1; ctx.strokeStyle = STROKE; ctx.fillStyle = FILL;
+    for (const s of spores){
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, R, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
     }
 
-    function spawn(fromSeed){
-      const rand = Math.random();
-  const isLeap  = rand < 0.65;           // 멀리 '뿅' 나타나는 예외
-  const isBurst = !isLeap && rand < 0.60; // 기본보다 조금 멀리 퍼지는 군집
-      if(!fromSeed){
-        center.x += 0.12; // 우측
-        center.y -= 0.05; // 위쪽
-        spreadX = Math.min(spreadX + 0.95, W * 0.36);
-        spreadY = Math.min(spreadY + 0.65, H * 0.32);
-      }
-      const baseAngle = -Math.PI/4; // 우상향
-      const angle = (Math.random()<0.10)
-        ? Math.random()*Math.PI*2
-        : baseAngle + (Math.random()-0.5)*0.28;
-
-      const rect = cvs.getBoundingClientRect(); W = rect.width; H = rect.height;
-
-      const minDist = 16; // 같은 자리 중복 방지(겹침 일부 허용)
-      let x,y,ok=false;
-      for(let tries=0; tries<20 && !ok; tries++){
-        const pow   = isLeap ? 0.35 : (isBurst ? 0.5 : 0.6);
-const multX = isLeap ? (2.2 + Math.random()*1.1) : (isBurst ? (1.6 + Math.random()*0.9) : 1);
-const multY = isLeap ? (1.6 + Math.random()*0.9) : (isBurst ? (1.2 + Math.random()*0.6) : 1);
-const distX = Math.pow(Math.random(), pow) * spreadX * multX;
-const distY = Math.pow(Math.random(), pow) * spreadY * multY;
-        x = center.x + Math.cos(angle) * distX;
-        y = center.y + Math.sin(angle) * distY;
-        ok = spores.every(s => ((s.x-x)**2 + (s.y-y)**2) > (minDist*minDist*0.6));
-      }
-      if(ok){
-        spores.push({x,y});
-        if(spores.length > MAX_SPORES) spores.shift();
-      }
+    nextSpawn -= dt;
+    if (nextSpawn <= 0){
+      for (let i=0;i<3;i++) spawn(i>0); // 군집으로 3개씩
+      nextSpawn = 120 + Math.random() * 120;
     }
-
     requestAnimationFrame(draw);
-  })();
+  }
+
+  function spawn(fromSeed){
+    // 분산 모드 확률 (필요하면 수치만 조절)
+    const rand    = Math.random();
+    const isLeap  = rand < 0.45;              // 멀리 '뿅' (많이 보고 싶으면 값 ↑)
+    const isBurst = !isLeap && rand < 0.80;   // 기본보다 넓게 퍼지는 군집
+
+    if (!fromSeed){
+      center.x += 0.12; // 우측으로 살짝
+      center.y -= 0.05; // 위로 살짝
+      spreadX = Math.min(spreadX + 0.95, W * 0.36);
+      spreadY = Math.min(spreadY + 0.65, H * 0.32);
+    }
+
+    const baseAngle = -Math.PI/4; // 우상향
+    const angle = (Math.random() < 0.10)
+      ? Math.random() * Math.PI * 2                // 예외 방향
+      : baseAngle + (Math.random()-0.5) * 0.28;    // 기본 방향 주변
+
+    const minDist = 16; // 같은 자리 중복 방지(겹침 일부 허용)
+    let x, y, ok = false;
+
+    for (let tries = 0; tries < 20 && !ok; tries++){
+      const pow   = isLeap ? 0.35 : (isBurst ? 0.50 : 0.60);
+      const multX = isLeap ? (2.2 + Math.random()*1.1) : (isBurst ? (1.6 + Math.random()*0.9) : 1.0);
+      const multY = isLeap ? (1.6 + Math.random()*0.9) : (isBurst ? (1.2 + Math.random()*0.6) : 1.0);
+
+      const distX = Math.pow(Math.random(), pow) * spreadX * multX;
+      const distY = Math.pow(Math.random(), pow) * spreadY * multY;
+
+      x = center.x + Math.cos(angle) * distX;
+      y = center.y + Math.sin(angle) * distY;
+
+      ok = spores.every(s => ((s.x - x) ** 2 + (s.y - y) ** 2) > (minDist * minDist * 0.6));
+    }
+
+    if (ok){
+      spores.push({ x, y });
+      if (spores.length > MAX_SPORES) spores.shift();
+    }
+  }
+
+  requestAnimationFrame(draw);
+})();
 </script>
+
 <script>
   // =====================================================
   // 데이터 작성 팁
