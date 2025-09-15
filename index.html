@@ -295,9 +295,7 @@
     const FILL   = '#ffffff';
     const MAX_SPORES = 600;
     const spores = [];
-
-    let W = cvs.getBoundingClientRect().width;
-    let H = cvs.getBoundingClientRect().height;
+    let W = 0, H = 0;
     let center = { x: 80, y: H*0.75 };
     if (window.innerWidth <= 640) {
    center.x = 20;   // 왼쪽으로 더 붙임
