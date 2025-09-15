@@ -264,6 +264,10 @@
     let W = cvs.getBoundingClientRect().width;
     let H = cvs.getBoundingClientRect().height;
     let center = { x: 80, y: H*0.75 };
+    if (window.innerWidth <= 640) {
+   center.x = 20;   // 왼쪽으로 더 붙임
+  center.y = H * 0.9;  // 아래쪽으로
+}
     let spreadX = 30, spreadY = 20;
     let nextSpawn = 120 + Math.random()*120; // 속도 약간 빠르게
     let last = performance.now();
