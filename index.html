@@ -105,7 +105,7 @@
 
   /* 여기 두 줄 추가 —— 글을 위로, 캔버스 옅게 */
   .hero{ position: relative; z-index: 1; }
-  #sporesCanvas{ opacity: .45; }
+  #sporesCanvas{ opacity: .90; }
 }
   </style>
 </head>
@@ -258,7 +258,7 @@
     const R = 11; // 모두 같은 크기
     const STROKE = 'rgba(0,0,0,0.25)';
     const FILL   = '#ffffff';
-    const MAX_SPORES = 220;
+    const MAX_SPORES = 600;
     const spores = [];
 
     let W = cvs.getBoundingClientRect().width;
@@ -287,8 +287,8 @@
 
     function spawn(fromSeed){
       const rand = Math.random();
-  const isLeap  = rand < 0.35;           // 멀리 '뿅' 나타나는 예외
-  const isBurst = !isLeap && rand < 0.50; // 기본보다 조금 멀리 퍼지는 군집
+  const isLeap  = rand < 0.65;           // 멀리 '뿅' 나타나는 예외
+  const isBurst = !isLeap && rand < 0.60; // 기본보다 조금 멀리 퍼지는 군집
       if(!fromSeed){
         center.x += 0.12; // 우측
         center.y -= 0.05; // 위쪽
@@ -306,7 +306,7 @@
       let x,y,ok=false;
       for(let tries=0; tries<20 && !ok; tries++){
         const pow   = isLeap ? 0.35 : (isBurst ? 0.5 : 0.6);
-const multX = isLeap ? (1.6 + Math.random()*0.9) : (isBurst ? (1.2 + Math.random()*0.6) : 1);
+const multX = isLeap ? (2.2 + Math.random()*1.1) : (isBurst ? (1.6 + Math.random()*0.9) : 1);
 const multY = isLeap ? (1.6 + Math.random()*0.9) : (isBurst ? (1.2 + Math.random()*0.6) : 1);
 const distX = Math.pow(Math.random(), pow) * spreadX * multX;
 const distY = Math.pow(Math.random(), pow) * spreadY * multY;
