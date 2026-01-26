@@ -14,7 +14,7 @@
       font-family:'S-CoreDream', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', Roboto, Arial, sans-serif;
       font-weight:200; font-size:13px; line-height:1.45;
       color:#111213; background:#fafafa;
-      max-width:640px; margin:0 auto; padding:40px 20px;
+      max-width:700px; margin:0 auto; padding:40px 20px;
     }
     a{ color:inherit; text-decoration:none }
     .back-btn{
@@ -23,33 +23,217 @@
       transition:background .2s,color .2s;
     }
     .back-btn:hover{ background:#111; color:#fff }
-    h1{
-      font-weight:400; font-size:18px; text-align:center; margin:10px 0 28px;
-    }
+    h1{ font-weight:400; font-size:18px; text-align:center; margin:10px 0 28px; }
     .divider{ height:1px; background:var(--line); margin:18px 0 22px }
-    p{ margin:0 0 12px }
+
+    /* language toggle */
+.lang-toggle{ display:flex; justify-content:center; gap:14px; margin:6px 0 24px; }
+.lang-toggle button{
+  font-family:inherit; font-size:12px; font-weight:400;
+  background:none; border:none; padding:4px 6px; cursor:pointer; color:#999;
+}
+.lang-toggle button.active{ color:#111; text-decoration:underline; }
+
+/* language toggle */
+    .langbar{ display:flex; justify-content:center; gap:14px; margin:8px 0 22px; }
+    .langbtn{
+      font-family:inherit;
+      font-size:12px;
+      font-weight:300;
+      padding:0;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      color:#666b74;
+      letter-spacing:.02em;
+    }
+    .langbtn:hover{ color:#111213; }
+    .langbtn.is-active{ font-weight:500; color:#111213; }
+
+    /* bilingual blocks */
+    .bilingual{ margin:0 0 22px; }
+    .bilingual .kr{ font-size:13px; line-height:1.75; }
+    .bilingual .en{ font-size:13px; line-height:1.75; }
+    .bilingual p{ margin:0 }
+
+    /* default: KR */
+    body[data-lang="kr"] .en{ display:none; }
+    body[data-lang="en"] .kr{ display:none; }
+
+    @media (max-width:820px){
+      body{ max-width:640px; }
+      .bilingual{ margin-bottom:20px; }
+    }
+
     footer{ margin-top:36px; text-align:center; font-size:11px; color:#777 }
   </style>
 </head>
-<body>
+<body data-lang="kr">
   <a href="index.html" class="back-btn" aria-label="메인으로">메인으로</a>
   <h1>Statement</h1>
   <div class="divider"></div>
-<br>
-<br>
-<p>곰팡이는 흔히 부정적으로 인식되지만, 나에게는 시간과 부재, 감정의 잔재를 드러내는 매개체다. 사람의 손길이 닿지 않는 구석에서 서서히 번져나가는 곰팡이는 그 자체로 시간의 축적이자, 잊힌 흔적을 암시한다. 나는 곰팡이를 단순한 오염이 아닌 감정적 존재로 바라보며, 그 유기적이고 번지는 성질을 조형물로 구체화한다. 이를 통해 눈에 보이지 않는 감정과 드러나지 않는 존재의 무게를 시각화하고자 한다. 각기 다른 형태로 표현된 곰팡이의 형상은 잊힌 기억과 내면의 감정을 투영하는 장치로 기능한다.<p/>
-<p>내가 자리를 비운 사이 자라난 곰팡이를 마주한 것이 시작이었다. 작업에 덮어둔 천과 남겨진 커피 표면에 자라난 곰팡이는 내가 없는 동안 흘러간 시간을 가시적으로 보여주었다. 내가 멈춰 있는 사이 다른 것들은 성장하고 있다는 사실을 상기시켰다. 하지만 곰팡이를 오랜 시간 바라볼수록, 그것은 단지 불안의 표식이 아니라, 내 부재를 대신 채워주는 존재처럼 느껴졌다. 곰팡이는 내가 없는 동안에도 그 자리를 차지하며, 빈틈을 드러나지 않게 만들었다. 그 모습에서 나는 일종의 위안을 얻었다. 곰팡이는 환영받지 못하는 존재이지만, 오히려 나와 닮아 있었다. <p/>
-<p>초기 작업은 더 개인적인 이야기에 가까웠다. <내가 잊은 시간>이라는 제목처럼, 비어 있던 나의 시간을 다시 환기하는 데 집중했다. 그래서 내 자리를 대신 차지할 수 있는 것이 무엇인지 고민했고, 사람과 늘 맞닿아있는 가구에 주목했다. 스툴이나 탁자, 조명처럼 생활 반경 안에 놓이는 형태를 만들었다. 작품이 바라보는 대상이기보다 일상에서 함께 머무는 존재가 되길 원했다. 곰팡이가 조용히 자리를 차지하듯, 가구 형태의 작업이 조용히 일상 공간을 침투하길 바랐다. 조명과 가구는 여전히 내 작업의 기반이며, 함께 머무는 것에 관한 생각은 이후의 조형 작업으로 확장되었다. <p/>
-<p>지금은 야생 덩굴이 감싼 사다리와 화분들의 진열을 작업으로 옮기고 있다. 오래된 빌라 현관이나 골목길에서 흔히 보이는 임시 정원에서 출발했다. 이 정원은 정성의 흔적인지 방치된 장소인지 분간하기 어렵지만 식물들은 하나같이 잘 자라고 있다. 이 진열은 주인의 취향과 생활의 흔적을 분명히 드러낸다. 그렇지만 누가 가꾸는지는 잘 모르는 채 식물들은 자란다. 그 분위기 속에서 돌봄과 방치의 이미지가 겹치고, 야생에 가까운 환경에서도 스스로 자라나는 모습에 대한 대견함과 애틋함이 남는다. 우리는 보호받는 듯 보이지만, 실제로는 스스로 자라야 하는 시간이 더 길다는 점에서 이 장면과 닮아있다. <p/>
-<p>가구가 함께 있는 자리를 만든다면, 조형 작업은 보이지 않는 자리를 드러낸다. 형식은 다르지만, 두 흐름 모두 비어 있던 자리를 점유한다는 점에서 같은 축을 공유한다. 나는 개인의 부재에서 출발한 질문을 공간과 타인의 자리로 넓혀 가고자 한다. <p/>
-<p>곰팡이가 가진 속성은 사회 속에서 소외된 존재들과도 겹친다. 곰팡이는 누구도 환영하지 않지만, 사람들의 시선이 닿지 않는 구석에서 조용히 자라난다. 주목받지 못한 자리, 버려진 표면 위에서만 겨우 살아남는 모습은 곧 사회 밖으로 밀려난 존재들과 닮았다. 나는 곰팡이를 바라보며, 그것이 단순한 미생물이 아니라 보이지 않는 사람들의 초상처럼 느껴졌다. <p/>
-<p>이 겹침은 장소의 기억과도 맞닿는다. 우리가 무심히 지나치는 방의 모서리와 어느 틈, 서랍 뒤편처럼 손이 닿지 않는 작은 공간들. 그리고 그곳에 존재하는 곰팡이는 뒤늦게 모습을 드러낸다. 그 미세한 등장은 소외된 존재들이 세상과 관계를 맺는 연결 속도와 닮았다. <p/>
-<p><더미더미>는 그런 곰팡이의 속성과 소외된 존재들을 겹쳐보며 시작되었다. 삶에 지쳐 방 한편으로 밀려난 사람들은, 마치 한구석에 쌓여 있는 더미(dummy)처럼 보인다. 제각기 다른 형태와 감정을 지닌 이 존재들은 서로에게 기대어, 무심한 하나의 덩어리를 이룬다. 그렇게 조용히 구석에 놓인 이들은, 과연 살아가고 있다고 할 수 있을까? 형체들은 얼핏 사람 같지만, 결국은 누구라고 정확히 말할 수 없는 애매한 형상들이다. 분명하게 보이지 않는 사람들처럼. <더미더미>는 쌓인 무게감과 반복되는 일상 속 존재들의 소외를 말하며, 잊힌 자리에 관한 이야기를 이어간다. <p/>
-<p>그 연장선에서 나는 <무제>를 통해, 멈춘 듯 흘러가는 시간과 사라지는 감각을 표현했다. 멀쩡히 누워 있으나 살아있음조차 확신할 수 없는 순간이 있다. 그런 감정은 종종 육체가 나의 것이 아닌 듯한 거리감을 만들어낸다. 그 감정 상태를 버섯이라는 생명체를 통해 시각화한다. 버섯은 곰팡이처럼 죽음과 부패, 혹은 방치된 공간에서 자라나지만, 동시에 강한 생명력을 보여준다. 움직이지 않는 발 위에 자란 버섯은 시간의 축적이자, 사라져 가는 자아를 대신해 피어난 존재다. 부식된 듯한 발의 형상은 자신을 감지하지 못한 채 흘려보낸 시간을 드러내고, 그 위로 얹힌 유기체들은 감정의 잔재처럼 남아 실체 없는 시간 속에서 천천히 번식한다. 이 조형물은 보이지 않는 틈을 채우는 존재들이자, 자신의 부재를 감지하는 순간들에 대한 기록이다. 나는 사라지는 감정과 흐려지는 자아 위에 조용히 피어나는 것들을 바라보며, 부재를 존재로 전환하는 조형 언어를 탐색하고 있다. <p/>
-<p>최근 작업에서는 곰팡이와 시간의 흔적을 표면에 구현하기 위해 여러 실험을 이어가고 있다. 그 과정에서 나는 유약이 단순히 아래로 흘러내리지 않고, 옆으로 번져가며 얇은 막과 덩어리를 형성하는 방식을 찾았다. 그 결과 마치 표면 위에서 또 다른 생명체가 증식하는 듯한 인상을 주며, 예상치 못한 흔적들을 남긴다. 이렇게 형성된 표면은 오래 방치된 듯한 인상을 품고 있으며, 곰팡이가 차지하는 자리처럼 시간의 공백을 시각화한다. 나는 이러한 과정을 통해 곰팡이의 성질을 물질로 옮기고, 흔적과 감정을 동시에 담아내는 표면을 구축하고자 한다. <p/>
-<p>곰팡이는 늘 보이지 않는 자리에서 생겨난다. 그러나 그 자리야말로 우리가 살아온 시간을 보여주는 자리다. 나의 작업 또한 그렇게, 잊힌 감정과 소외된 존재의 무게를 조용히 드러내며, 부재 속에서도 이어지는 생명을 이야기하고자 한다. 결국 나를 대신해 존재하게 된 곰팡이들이 그렇듯, 이제는 그 소외당하는 형상들이 홀로 남지 않고 누군가와 함께 기억되고 사랑받길 바란다. <p/>
-<br>
-<br>
+<br><br>
+  <div class="langbar" role="tablist" aria-label="Language">
+    <button class="langbtn is-active" type="button" data-lang="kr" role="tab" aria-selected="true">KR</button>
+    <span aria-hidden="true">/</span>
+    <button class="langbtn" type="button" data-lang="en" role="tab" aria-selected="false">EN</button>
+  </div>
+
+<br><br>
+
+<script>
+  function setLang(lang){
+    const body = document.body;
+    const btnKr = document.getElementById('btn-kr');
+    const btnEn = document.getElementById('btn-en');
+
+    if(lang === 'en'){
+      body.classList.add('show-en');
+      btnEn.classList.add('active');
+      btnKr.classList.remove('active');
+    } else {
+      body.classList.remove('show-en');
+      btnKr.classList.add('active');
+      btnEn.classList.remove('active');
+    }
+  }
+</script>
+
+
+
+  <!-- 1 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>곰팡이는 흔히 부정적으로 인식되지만, 나에게는 시간과 부재, 감정의 잔재를 드러내는 매개체다. 사람의 손길이 닿지 않는 구석에서 서서히 번져나가는 곰팡이는 그 자체로 시간의 축적이자, 잊힌 흔적을 암시한다. 나는 곰팡이를 단순한 오염이 아닌 감정적 존재로 바라보며, 그 유기적이고 번지는 성질을 조형물로 구체화한다. 이를 통해 눈에 보이지 않는 감정과 드러나지 않는 존재의 무게를 시각화하고자 한다. 각기 다른 형태로 표현된 곰팡이의 형상은 잊힌 기억과 내면의 감정을 투영하는 장치로 기능한다.</p>
+    </div>
+    <div class="en">
+      <p>Mold is often perceived negatively, but for me it is a medium that reveals time, absence, and the residue of emotion. Spreading slowly in corners untouched by human hands, it becomes an accumulation of time and a hint of what has been forgotten. I regard mold not as simple contamination but as an emotional presence, and I materialize its organic, proliferating nature into sculptural forms. Through this, I aim to visualize invisible emotions and the weight of unseen existences. The varied mold-like figures function as devices that project forgotten memories and inner feelings.</p>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>내가 자리를 비운 사이 자라난 곰팡이를 마주한 것이 시작이었다. 작업에 덮어둔 천과 남겨진 커피 표면에 자라난 곰팡이는 내가 없는 동안 흘러간 시간을 가시적으로 보여주었다. 내가 멈춰 있는 사이 다른 것들은 성장하고 있다는 사실을 상기시켰다. 하지만 곰팡이를 오랜 시간 바라볼수록, 그것은 단지 불안의 표식이 아니라, 내 부재를 대신 채워주는 존재처럼 느껴졌다. 곰팡이는 내가 없는 동안에도 그 자리를 차지하며, 빈틈을 드러나지 않게 만들었다. 그 모습에서 나는 일종의 위안을 얻었다. 곰팡이는 환영받지 못하는 존재이지만, 오히려 나와 닮아 있었다.</p>
+    </div>
+    <div class="en">
+      <p>This work began when I encountered mold that had grown while I was away. The mold on the cloth covering my work, and on the surface of leftover coffee, made visible the time that had passed in my absence—reminding me that while I was still, other things continued to grow. Yet the longer I looked, the more it felt less like a sign of anxiety and more like a presence that filled in for me. Mold occupied the space in my place, making the emptiness less visible. In that image I found a strange comfort. It is an unwelcome existence, yet it felt uncannily similar to me.</p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>초기 작업은 더 개인적인 이야기에 가까웠다. &lt;내가 잊은 시간&gt;이라는 제목처럼, 비어 있던 나의 시간을 다시 환기하는 데 집중했다. 그래서 내 자리를 대신 차지할 수 있는 것이 무엇인지 고민했고, 사람과 늘 맞닿아있는 가구에 주목했다. 스툴이나 탁자, 조명처럼 생활 반경 안에 놓이는 형태를 만들었다. 작품이 바라보는 대상이기보다 일상에서 함께 머무는 존재가 되길 원했다. 곰팡이가 조용히 자리를 차지하듯, 가구 형태의 작업이 조용히 일상 공간을 침투하길 바랐다. 조명과 가구는 여전히 내 작업의 기반이며, 함께 머무는 것에 관한 생각은 이후의 조형 작업으로 확장되었다.</p>
+    </div>
+    <div class="en">
+      <p>My early works were closer to personal narratives. As the title <em>The Time I Forgot</em> suggests, I focused on reactivating a period that felt empty. I asked what might take my place, and turned to furniture—objects that constantly coexist with the body. I made stools, tables, and lamps: forms that sit within the radius of everyday life. I wanted the works to be companions one stays with, rather than distant objects to be only looked at. Just as mold quietly occupies a place, I hoped these furniture-like forms would quietly infiltrate daily space. Lighting and furniture remain the foundation of my practice, and my thoughts on “staying with” later expanded into sculptural works.</p>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>지금은 야생 덩굴이 감싼 사다리와 화분들의 진열을 작업으로 옮기고 있다. 오래된 빌라 현관이나 골목길에서 흔히 보이는 임시 정원에서 출발했다. 이 정원은 정성의 흔적인지 방치된 장소인지 분간하기 어렵지만 식물들은 하나같이 잘 자라고 있다. 이 진열은 주인의 취향과 생활의 흔적을 분명히 드러낸다. 그렇지만 누가 가꾸는지는 잘 모르는 채 식물들은 자란다. 그 분위기 속에서 돌봄과 방치의 이미지가 겹치고, 야생에 가까운 환경에서도 스스로 자라나는 모습에 대한 대견함과 애틋함이 남는다. 우리는 보호받는 듯 보이지만, 실제로는 스스로 자라야 하는 시간이 더 길다는 점에서 이 장면과 닮아있다.</p>
+    </div>
+    <div class="en">
+      <p>Recently, I have been translating into sculpture the image of wild vines wrapping around ladders and rows of flowerpots. This originates from improvised gardens often seen at the entrances of old villas or in alleyways. It is hard to tell whether these gardens are carefully tended or simply abandoned, yet the plants grow well regardless. The arrangement reveals the owner’s taste and traces of daily life, even though we rarely know who actually cares for it. In that atmosphere, care and neglect overlap, leaving tenderness and admiration for life that continues to grow even in near-wild conditions. We, too, may appear protected, but in reality we spend a longer time growing on our own—so we resemble these scenes.</p>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>가구가 함께 있는 자리를 만든다면, 조형 작업은 보이지 않는 자리를 드러낸다. 형식은 다르지만, 두 흐름 모두 비어 있던 자리를 점유한다는 점에서 같은 축을 공유한다. 나는 개인의 부재에서 출발한 질문을 공간과 타인의 자리로 넓혀 가고자 한다.</p>
+    </div>
+    <div class="en">
+      <p>If furniture creates a place to stay with, my sculptural works reveal places that cannot be seen. Though their forms differ, both share the same axis: occupying what was once empty. I seek to expand questions that began with personal absence into spaces and the places of others.</p>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>곰팡이가 가진 속성은 사회 속에서 소외된 존재들과도 겹친다. 곰팡이는 누구도 환영하지 않지만, 사람들의 시선이 닿지 않는 구석에서 조용히 자라난다. 주목받지 못한 자리, 버려진 표면 위에서만 겨우 살아남는 모습은 곧 사회 밖으로 밀려난 존재들과 닮았다. 나는 곰팡이를 바라보며, 그것이 단순한 미생물이 아니라 보이지 않는 사람들의 초상처럼 느껴졌다.</p>
+    </div>
+    <div class="en">
+      <p>The nature of mold overlaps with marginalized beings in society. Mold is never welcomed, yet it quietly grows in corners beyond people’s gaze. Its survival on neglected surfaces resembles those pushed outside the social frame. Looking at mold, I began to feel it was not merely a microorganism, but something like a portrait of invisible people.</p>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>이 겹침은 장소의 기억과도 맞닿는다. 우리가 무심히 지나치는 방의 모서리와 어느 틈, 서랍 뒤편처럼 손이 닿지 않는 작은 공간들. 그리고 그곳에 존재하는 곰팡이는 뒤늦게 모습을 드러낸다. 그 미세한 등장은 소외된 존재들이 세상과 관계를 맺는 연결 속도와 닮았다.</p>
+    </div>
+    <div class="en">
+      <p>This overlap also connects to the memory of places: room corners we pass without noticing, narrow gaps, and small spaces beyond reach—behind drawers, under edges. Mold appears belatedly in such areas. Its subtle emergence resembles the slow tempo at which marginalized beings form connections with the world.</p>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>&lt;더미더미&gt;는 그런 곰팡이의 속성과 소외된 존재들을 겹쳐보며 시작되었다. 삶에 지쳐 방 한편으로 밀려난 사람들은, 마치 한구석에 쌓여 있는 더미(dummy)처럼 보인다. 제각기 다른 형태와 감정을 지닌 이 존재들은 서로에게 기대어, 무심한 하나의 덩어리를 이룬다. 그렇게 조용히 구석에 놓인 이들은, 과연 살아가고 있다고 할 수 있을까? 형체들은 얼핏 사람 같지만, 결국은 누구라고 정확히 말할 수 없는 애매한 형상들이다. 분명하게 보이지 않는 사람들처럼. &lt;더미더미&gt;는 쌓인 무게감과 반복되는 일상 속 존재들의 소외를 말하며, 잊힌 자리에 관한 이야기를 이어간다.</p>
+    </div>
+    <div class="en">
+      <p><em>Dummy Dummy</em> began by layering the qualities of mold with those of marginalized existence. People exhausted by life and pushed to the edge of a room appear like piles—dummies—stacked in a corner. Each figure holds a different form and emotion, yet together they lean on one another and become a single indifferent mass. Placed quietly at the edge, can these forms truly be said to be living? They seem human at first glance, yet cannot be clearly identified as anyone—like people who are not clearly seen. <em>Dummy Dummy</em> speaks of accumulated weight and alienation within repetitive daily life, continuing the story of forgotten places.</p>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>그 연장선에서 나는 &lt;무제&gt;를 통해, 멈춘 듯 흘러가는 시간과 사라지는 감각을 표현했다. 멀쩡히 누워 있으나 살아있음조차 확신할 수 없는 순간이 있다. 그런 감정은 종종 육체가 나의 것이 아닌 듯한 거리감을 만들어낸다. 그 감정 상태를 버섯이라는 생명체를 통해 시각화한다. 버섯은 곰팡이처럼 죽음과 부패, 혹은 방치된 공간에서 자라나지만, 동시에 강한 생명력을 보여준다. 움직이지 않는 발 위에 자란 버섯은 시간의 축적이자, 사라져 가는 자아를 대신해 피어난 존재다. 부식된 듯한 발의 형상은 자신을 감지하지 못한 채 흘려보낸 시간을 드러내고, 그 위로 얹힌 유기체들은 감정의 잔재처럼 남아 실체 없는 시간 속에서 천천히 번식한다. 이 조형물은 보이지 않는 틈을 채우는 존재들이자, 자신의 부재를 감지하는 순간들에 대한 기록이다. 나는 사라지는 감정과 흐려지는 자아 위에 조용히 피어나는 것들을 바라보며, 부재를 존재로 전환하는 조형 언어를 탐색하고 있다.</p>
+    </div>
+    <div class="en">
+      <p>In this continuation, <em>Untitled</em> expresses time that seems to stop yet continues to flow, and sensations that gradually fade. There are moments when one lies still, unsure even of being alive; such feelings create distance, as if the body were no longer one’s own. I visualize this state through mushrooms. Like mold, mushrooms grow in places of decay and abandonment, yet they also embody strong vitality. Mushrooms sprouting from a motionless foot become an accumulation of time—beings that bloom in place of a disappearing self. The corroded form of the foot reveals time that passed without awareness, while the organisms resting upon it remain like emotional residue, slowly multiplying within formless time. This sculpture records beings that fill invisible gaps and moments of sensing one’s own absence. By observing these quiet growths upon fading emotions and selfhood, I explore a sculptural language that transforms absence into presence.</p>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>최근 작업에서는 곰팡이와 시간의 흔적을 표면에 구현하기 위해 여러 실험을 이어가고 있다. 그 과정에서 나는 유약이 단순히 아래로 흘러내리지 않고, 옆으로 번져가며 얇은 막과 덩어리를 형성하는 방식을 찾았다. 그 결과 마치 표면 위에서 또 다른 생명체가 증식하는 듯한 인상을 주며, 예상치 못한 흔적들을 남긴다. 이렇게 형성된 표면은 오래 방치된 듯한 인상을 품고 있으며, 곰팡이가 차지하는 자리처럼 시간의 공백을 시각화한다. 나는 이러한 과정을 통해 곰팡이의 성질을 물질로 옮기고, 흔적과 감정을 동시에 담아내는 표면을 구축하고자 한다.</p>
+    </div>
+    <div class="en">
+      <p>In my recent works, I continue experimenting with surfaces that embody mold and traces of time. In the process, I searched for ways for glaze not simply to drip downward, but to spread sideways, forming thin membranes and clustered masses. The resulting surfaces suggest another life form proliferating across them, leaving unexpected marks. They carry the impression of long neglect, visualizing gaps in time—like the spaces mold occupies. Through these processes, I translate the nature of mold into material, building surfaces that hold both trace and emotion.</p>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="bilingual">
+    <div class="kr">
+      <p>곰팡이는 늘 보이지 않는 자리에서 생겨난다. 그러나 그 자리야말로 우리가 살아온 시간을 보여주는 자리다. 나의 작업 또한 그렇게, 잊힌 감정과 소외된 존재의 무게를 조용히 드러내며, 부재 속에서도 이어지는 생명을 이야기하고자 한다. 결국 나를 대신해 존재하게 된 곰팡이들이 그렇듯, 이제는 그 소외당하는 형상들이 홀로 남지 않고 누군가와 함께 기억되고 사랑받길 바란다.</p>
+    </div>
+    <div class="en">
+      <p>Mold always emerges in unseen places. Yet these are precisely the places that reveal the time we have lived. In the same way, my work quietly exposes forgotten emotions and the weight of marginalized existence, speaking of life that continues even in absence. Just as mold comes to exist in my place, I hope these neglected forms will no longer remain alone, but be remembered—and loved—alongside someone.</p>
+    </div>
+  </div>
+
+  <br><br>
   <footer>All rights reserved © Jiwon Byun</footer>
+  <script>
+    (function(){
+      const body = document.body;
+      const buttons = Array.from(document.querySelectorAll('.langbtn'));
+      const saved = localStorage.getItem('statement_lang');
+      if(saved === 'en' || saved === 'kr') setLang(saved);
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => setLang(btn.dataset.lang));
+      });
+
+      function setLang(lang){
+        body.setAttribute('data-lang', lang);
+        localStorage.setItem('statement_lang', lang);
+        buttons.forEach(b => {
+          const on = b.dataset.lang === lang;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
