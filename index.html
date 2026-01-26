@@ -488,17 +488,42 @@ function toWeserv(src, w, fmt='webp', q=75){
 
   // 작품 데이터 (URL은 그대로 보존)
   const ITEMS = [
-    
+
      {
+    title: "내가 잊은 시간",
+    year: 2022,
+    type: "sculpture, furniture", // furniture | sculpture | lighting
+    material: "도자",
+    size: "W285xD340xH130mm",
+    cover: "https://github.com/user-attachments/assets/bce3cd10-9728-4d06-bf8a-02b27f5f2d5f",
+       images:[
+      "https://github.com/user-attachments/assets/bce3cd10-9728-4d06-bf8a-02b27f5f2d5f",
+      "https://github.com/user-attachments/assets/5f12e589-a887-4a18-8b2c-0e8a4596f70f"
+    ],
+      {
+    title: "말라버린 안부",
+    year: 2025,
+    type: "sculpture", // furniture | sculpture | lighting
+    material: "도자",
+    size: "W285xD340xH130mm",
+    cover: "https://github.com/user-attachments/assets/a35a6710-e5dd-4ec4-8665-109b7be2b7a9",
+       images:[
+      "https://github.com/user-attachments/assets/a35a6710-e5dd-4ec4-8665-109b7be2b7a9",
+      "https://github.com/user-attachments/assets/4346329e-c2a4-4e5b-ab5d-70cd61759e43",
+      "https://github.com/user-attachments/assets/7d9ba344-3402-4223-99fe-38bd1250ce52"
+    ],
+    desc: "전하지 못한 마음은 시간이 지나면서 점점 말라붙는다. 이 작업은 끝내 전하지 못한 말, 또는 다 전했음에도 닿지 못한 감정에 대한 조형이다. 꽃을 닮은 형상은 마치 오랜 시간 방치된 감정처럼 시들어 있으며, 표면은 부식된 흔적과 곰팡이 같은 질감으로 덮여 있다. 한 송이로는 부족했던 마음을 한 다발 모아 전하고 싶었다."
+  },
+    {
     title: "내가 잊은 시간",
     year: 2025,
     type: "lighting", // furniture | sculpture | lighting
-    material: "도자",
-    size: "w280xd280x510mm",
+    material: "도자, 조명부품",
+    size: "W280xD280xH510mm",
     cover: "https://github.com/user-attachments/assets/bbde0765-e890-4e66-9605-44de4a28fd57",
        images:[
       "https://github.com/user-attachments/assets/bbde0765-e890-4e66-9605-44de4a28fd57",
-      "https://github.com/user-attachments/assets/8d943539-e6ef-410f-87a9-18683458b4e6"
+      "https://github.com/user-attachments/assets/07e2cf46-fbd2-4fc4-8e97-db10b83ab7ac"
     ],
     desc: "주변에 존재하는 익숙한 사물들을 곰팡이가 자라나며 형태를 따라한 듯한 모습으로 재구성하고 있다."
   },
@@ -507,7 +532,7 @@ function toWeserv(src, w, fmt='webp', q=75){
     year: 2023,
     type: "furniture", // furniture | sculpture | lighting
     material: "도자",
-    size: "w470xd410x510mm",
+    size: "W470xD410xH510mm",
     cover: "https://github.com/user-attachments/assets/90d86ddf-e4f8-4100-900e-276ec7fc4b11",
     desc: "주변에 존재하는 익숙한 사물들을 곰팡이가 자라나며 형태를 따라한 듯한 모습으로 재구성하고 있다. 이 스툴은 표면에 부유하며 속이 비어있는 채 자라나는 곰팡이의 특성을 보여주고자 구멍을 뚫어 작업하였고, 자라나는 곰팡이의 유기적인 움직임을 표현했다."
   },
@@ -529,7 +554,7 @@ function toWeserv(src, w, fmt='webp', q=75){
     year: 2023,
     type: "sculpture", // furniture | sculpture | lighting
     material: "도자, 칸탈선, 비즈",
-    size: "w450xd380x220mm",
+    size: "W450xD380xH220mm",
     cover: "https://github.com/user-attachments/assets/34a725f7-7cbc-4bcd-be77-01a6e1a35ec4",
     desc: "구석에 웅크려 숨어있는 듯하지만, 붉은색과 반짝임으로 시선을 끌어당긴다. 드러나고 싶지 않은 그림자는 결국 드러나기를 갈망한다. 이 작업은 소외와 욕망이 동시에 깃든 존재의 모순을 시각화한다."
   },
@@ -538,7 +563,7 @@ function toWeserv(src, w, fmt='webp', q=75){
   year: 2025,
   type: "sculpture", // furniture | sculpture | lighting
   material: "도자",
-  size: "w105xd230x70mm",
+  size: "W105xD230xH70mm",
   cover: "https://github.com/user-attachments/assets/c1b4c717-a58b-4f5a-807d-56ddd88d78f7",
   images:[
     "https://github.com/user-attachments/assets/c1b4c717-a58b-4f5a-807d-56ddd88d78f7",
@@ -553,7 +578,7 @@ function toWeserv(src, w, fmt='webp', q=75){
     year: 2025,
     type: "sculpture", // furniture | sculpture | lighting
     material: "도자",
-    size: "w310xd340xh560mm",
+    size: "W310xD340xH560mm",
     cover: "https://github.com/user-attachments/assets/80a36d83-f0bb-4161-ad23-911410d04f47",
     // 상세 이미지가 없으면 images 속성 자체를 생략해도 됩니다.
     desc: "화분처럼 보이는 아래쪽은 감정을 담아둔 공간이며, 위에는 곰팡이가 피어난 식물 형상의 뚜껑이 있다. 식물은 생명이라기보다는, 눌러두고 방치된 감정이 자라난 흔적이다. 감정을 눌러담은 채 살아가는 이들의 내면과 언젠가 깨질지 모른다는 불안의 모양을 표현했다."
@@ -598,7 +623,7 @@ function toWeserv(src, w, fmt='webp', q=75){
   ],
   desc:"이 작업은 한때 내가 썼던 편지들에서 시작되었다. 나는 그 말들을 가느다란 조각으로 찢어, 자라나는 생물 같은 상자 안에 담았다. 파쇄의 행위는 내가 말로 꺼내지 못했던 감정을 숨기기 위한 방식이었다. 너무 빠르게 지나가버린 순간처럼, 말은 사라졌지만 마음은 남았다. 이 작업은 그 찰나 뒤에 남은 조용한 순간을 품고 있다. 사라진 감정마저도 결국 어떤 흔적은 남긴다는 것을, 이 상자는 조용히 말하고 있다."
 },
-  { id:7, title:"머무르지 않는 자리", year:2023, type:"furniture", material:"도자", size:"460×420×230mm",
+  { id:7, title:"머무르지 않는 자리", year:2023, type:"furniture", material:"도자", size:"W460×D420×H230mm",
     cover:"https://github.com/user-attachments/assets/52169802-1826-48da-bb03-8011c87f9bc3",
     desc:"누군가를 위해 만들어졌으나, 결국 누구의 것도 되지 못한 자리에 대한 이야기다. 소반은 머무름과 사용을 전재로 하지만, 이 작업은 아무도 머무르지 않은 공간을 담고있다. 표면에 피어난 곰팡이와 불안정한 다리는 방치된 흔적이며 감정이 머무르지 못한 자리를 암시한다. 이 작업을 통해 보이지 않는 부재가 남긴 감정을 드러내고자 했다."
   }
