@@ -160,6 +160,54 @@
     .slider::before{ content:""; position:absolute; height:18px; width:18px; left:3px; bottom:3px; background:#fff; transition:.3s; border-radius:50%; }
     .switch input:checked + .slider{ background:#111213; }
     .switch input:checked + .slider::before{ transform: translateX(18px); }
+
+    /* ===== About 모달: 원형(정원) ===== */
+    #about.lightbox{
+      align-items:center;
+      justify-content:center;
+    }
+
+    #about .frame{
+      width: min(520px, 90vw);
+      height: min(520px, 90vw);
+      max-width: none;
+      max-height: none;
+      border-radius: 50%;
+      overflow: hidden;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #about header{
+      border-bottom: none;
+      width: 100%;
+    }
+
+    #about .lb-top{
+      justify-content: center;
+    }
+
+    #about .lb-body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    #about .lb-aside{
+      border: none !important;
+      padding: 32px;
+      text-align: center;
+    }
+
+    #about h3,
+    #about p{
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -318,14 +366,15 @@
   const dpr = Math.min(2, window.devicePixelRatio || 1);
 
   function drawSpikyCircle(ctx, cx, cy, r, t, opts = {}){
-    const spikes      = opts.spikes      ?? 16;
-    const lenMin      = opts.lenMin      ?? 3;
-    const lenMax      = opts.lenMax      ?? 6;
-    const wobble      = opts.wobble      ?? 1;
-    const thickness   = opts.thickness   ?? 1.0;
-    const color       = opts.color       ?? 'rgba(0,0,0,0.32)';
-    const edge        = opts.edge        ?? '#ffffff';
-    const borderColor = opts.borderColor ?? 'rgba(0,0,0,0.28)';
+const spikes      = (opts.spikes      != null ? opts.spikes      : 16);
+const lenMin      = (opts.lenMin      != null ? opts.lenMin      : 3);
+const lenMax      = (opts.lenMax      != null ? opts.lenMax      : 6);
+const wobble      = (opts.wobble      != null ? opts.wobble      : 1);
+const thickness   = (opts.thickness   != null ? opts.thickness   : 1.0);
+const color       = (opts.color       != null ? opts.color       : 'rgba(0,0,0,0.32)');
+const edge        = (opts.edge        != null ? opts.edge        : '#ffffff');
+const borderColor = (opts.borderColor != null ? opts.borderColor : 'rgba(0,0,0,0.28)');
+
 
     ctx.fillStyle = edge;
     ctx.beginPath();
@@ -514,11 +563,18 @@
     requestAnimationFrame(drawFrame);
   }
 
+// ResizeObserver가 없으면 여기서 터지면서 전체 버튼이 다 죽어버림(모바일 구형 브라우저)
+if ('ResizeObserver' in window) {
   const ro = new ResizeObserver(fit);
   ro.observe(hero);
-  fit();
-  for (let i = 0; i < 12; i++) spawn(false);
-  requestAnimationFrame(drawFrame);
+} else {
+  window.addEventListener('resize', fit, { passive: true });
+}
+
+fit();
+for (let i = 0; i < 12; i++) spawn(false);
+requestAnimationFrame(drawFrame);
+
 })();
 </script>
 
@@ -942,6 +998,8 @@
   function closeAboutFn(){ about.classList.remove('open'); about.setAttribute('aria-hidden','true'); document.body.style.overflow=''; aboutBtn && aboutBtn.setAttribute('aria-expanded','false'); }
   if(aboutBtn){ aboutBtn.addEventListener('click', function(){ closeDrawer(); openAbout(); }); }
   closeAbout.addEventListener('click', closeAboutFn);
+  // 바깥(오버레이) 클릭하면 닫기
+  about.addEventListener('click', function(e){ if(e.target===about) closeAboutFn(); });
 
   var drawer = document.getElementById('drawer');
   var drawerOverlay = document.getElementById('drawerOverlay');
