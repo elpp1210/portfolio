@@ -4,26 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JIWON BYUN — Portfolio</title>
-  <meta name="description" content="곰팡이의 시간성과 부재를 탐구하는 작가 변지원 포트폴리오" />
+  <meta name="description" content="변지원 포트폴리오" />
   <!-- Fonts -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/SCoreDream.css" />
   <link rel="preconnect" href="https://github.com">
   <link rel="dns-prefetch" href="https://github.com">
   <style>
-    /* Filter guide image */
-.filter-guide{.filter-guide{ display:block; }
-  display:flex;
-  justify-content:center;
-  margin-bottom:10px;
-  pointer-events:none; /* 버튼 클릭 방해 안 하게 */
-}
-
-.filter-guide img{
-  width:100px;          /* 필요하면 조절 */
-  max-width:20vw;
-  opacity:0.9;
-}
     :root{ --bg:#ffffff; --card:#ffffff; --text:#111213; --muted:#666b74; --line:#e9eaee; --ring:rgba(0,0,0,.06); --shadow:0 18px 50px rgba(0,0,0,.06); }
     *{box-sizing:border-box}
     html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'S-CoreDream',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.1px}
@@ -61,11 +48,7 @@
     .chip[aria-pressed="true"], .btn[aria-pressed="true"]{border-color:#c9ccd5;box-shadow:0 0 0 4px var(--ring)}
 
     /* Gallery */
-    .item figure > picture{
-  display:block;       /* inline → block */
-  width:100%;
-  height:100%;         /* figure의 4:3 높이를 그대로 채움 */
-}
+    .item figure > picture{ display:block; width:100%; height:100%; }
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
     .item{grid-column:span 4;position:relative;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);opacity:0;transform:translateY(4px);content-visibility:auto;contain-intrinsic-size:300px 225px}
     .item.show{opacity:1;transform:none;transition:opacity .28s ease, transform .28s ease}
@@ -108,19 +91,35 @@
     .drawer .menu-list a,.drawer .menu-list button{width:100%;text-align:left;margin-bottom:10px}
     .controls{display:none}
 
+    /* Filter-guide image */
+    .filter-guide{position:relative; width:100%; margin-bottom:16px;}
+    .filter-guide img{
+      width:80px;
+      max-width:20vw;
+      opacity:0.9;
+      position:absolute;
+      top:-50px;    /* 위쪽으로 살짝 띄움 */
+      right:0;      /* 우측 정렬 */
+    }
+    @media(max-width:640px){
+      .filter-guide img{
+        top:-40px;
+        right:0;
+      }
+    }
+
     /* Responsive */ 
     @media (max-width: 1024px){ .grid{gap:20px} 
                                .item{grid-column:span 6} 
                                .lb-body{grid-template-columns:1fr} }
     @media (max-width: 640px){ .item{grid-column:span 12} .btn,.chip{padding:9px 12px;font-size:12px} } 
-    
-    /* Lightbox mobile */ 
     @media (max-width: 640px){ .lightbox{align-items:flex-start;justify-content:center;overflow:auto;padding:16px} 
-  .lightbox .frame{width:100%;max-width:680px;border-radius:20px;overflow:hidden;background:#fff;height:auto;max-height:none} 
-  .lb-body{display:block;overflow:visible} 
-  .lb-media{background:#000;display:flex;justify-content:center;align-items:flex-start;padding:0} 
-  .lb-media img{width:100%;height:auto;max-height:none;object-fit:contain} 
-   .lb-aside{border-left:none;border-top:1px solid var(--line)} }
+      .lightbox .frame{width:100%;max-width:680px;border-radius:20px;overflow:hidden;background:#fff;height:auto;max-height:none} 
+      .lb-body{display:block;overflow:visible} 
+      .lb-media{background:#000;display:flex;justify-content:center;align-items:flex-start;padding:0} 
+      .lb-media img{width:100%;height:auto;max-height:none;object-fit:contain} 
+      .lb-aside{border-left:none;border-top:1px solid var(--line)} 
+    }
   </style>
 </head>
 <body>
@@ -130,7 +129,6 @@
     <nav class="nav" aria-label="주요">
       <div class="brand"><a class="brand-link" href="./" aria-label="Home">JIWON BYUN</a></div>
       <div class="spacer"></div>
-      <!-- Menu (Hamburger) -->
       <button id="menuBtn" class="menu-btn" aria-label="메뉴 열기" aria-controls="drawer" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 6h16M4 12h16M4 18h16"/>
@@ -152,11 +150,10 @@
     <!-- Filters -->
     <section aria-label="필터">
       <div class="filters" role="group" aria-label="작품 필터">
-         <div class="filter-guide">
-    <img src="https://github.com/user-attachments/assets/fa5b44ac-0c1f-4b03-a14e-7c676f054416" alt="필터 안내: 클릭해보세요">
-  </div>
+        <div class="filter-guide">
+          <img src="https://github.com/user-attachments/assets/fa5b44ac-0c1f-4b03-a14e-7c676f054416" alt="필터 안내: 클릭해보세요" class="click-indicator">
+        </div>
         <div class="filters-bar">
-          <!-- Left: 전체 + 연도 -->
           <div class="filters-left" aria-label="왼쪽 필터 묶음">
             <div class="filters-row year-filters" aria-label="연도 필터">
               <button class="chip" data-action="reset" aria-pressed="true">전체</button>
@@ -166,7 +163,6 @@
               <button class="chip" data-filter-type="year" data-value="2025" aria-pressed="false">2025</button>
             </div>
           </div>
-          <!-- Right: 종류 -->
           <div class="filters-right" aria-label="오른쪽 필터 묶음">
             <div class="filters-row type-filters" aria-label="종류 필터">
               <button class="chip" data-filter-type="type" data-value="furniture" aria-pressed="false">가구</button>
@@ -187,7 +183,7 @@
   <!-- Footer -->
   <footer id="contact">
     <div class="footer-bar">
-      <div class="footer-left">© 2025 jiwonbyun. All rights reserved.</div>
+      <div class="footer-left">© jiwonbyun. All rights reserved.</div>
       <div class="footer-right">
         <a class="btn" href="https://www.instagram.com/ji.jiwon" target="_blank" rel="noreferrer">Instagram</a>
         <a class="btn" href="mailto:jiwonbyun97@gmail.com">Email</a>
