@@ -1012,23 +1012,25 @@ requestAnimationFrame(drawFrame);
   drawerOverlay.addEventListener('click', closeDrawer);
   window.addEventListener('keydown', function(e){ if(e.key==='Escape'){ if(drawer.classList.contains('open')) closeDrawer(); if(about.classList.contains('open')) closeAboutFn(); }});
 
-  // ===== Caption 토글 (PC) =====
+// ===== Caption 토글 (PC) =====
+function syncCaptionVisibility(){
+  const captionToggle = document.getElementById('captionToggle'); // ✅ 여기서 매번 가져오기
+  const show = !!(captionToggle && captionToggle.checked);
+
+  document.querySelectorAll('.item .meta, .item .title, .item .desc, .item .badge').forEach(el=>{
+    el.style.display = show ? '' : 'none';
+  });
+}
+
+(function initCaptionToggle(){
   const captionToggle = document.getElementById('captionToggle');
+  if (!captionToggle) return;
 
-  function syncCaptionVisibility(){
-    const show = !!(captionToggle && captionToggle.checked);
-    document.querySelectorAll('.item .meta, .item .title, .item .desc, .item .badge').forEach(el=>{
-      el.style.display = show ? '' : 'none';
-    });
-  }
+  captionToggle.addEventListener('change', syncCaptionVisibility);
+  captionToggle.checked = false; // 기본 OFF
+  syncCaptionVisibility();
+})();
 
-  if (captionToggle){
-    captionToggle.addEventListener('change', syncCaptionVisibility);
-    // 기본값: OFF (숨김) — 필요하면 true로 바꿔도 됨
-    captionToggle.checked = false;
-    syncCaptionVisibility();
-  }
 </script>
-
 </body>
 </html>
