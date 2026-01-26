@@ -120,6 +120,15 @@
       .lb-media img{width:100%;height:auto;max-height:none;object-fit:contain} 
       .lb-aside{border-left:none;border-top:1px solid var(--line)} 
     }
+    @media (max-width: 640px) {
+  /* 모바일에서 갤러리 이미지 위 텍스트 전부 숨기기 */
+  .item .badge,
+  .item .meta,
+  .item .title,
+  .item .desc {
+    display: none !important;
+  }
+}
   </style>
 </head>
 <body>
