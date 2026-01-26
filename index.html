@@ -274,6 +274,81 @@
   cursor: pointer;
 }
 .about-close:hover{ opacity: .8; }
+/* About 열릴 때 */
+#about.open .frame{
+  animation: aboutIn .45s ease-out forwards;
+}
+
+@keyframes aboutIn{
+  0%{
+    transform: scale(.94);
+    opacity: 0;
+  }
+  100%{
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* ===== About 원형 마무리 연출 ===== */
+
+/* 등장 애니메이션 */
+#about.open .frame{
+  animation: aboutIn .45s ease-out forwards;
+}
+
+@keyframes aboutIn{
+  0%{
+    transform: scale(.94);
+    opacity: 0;
+  }
+  100%{
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 텍스트 리듬 */
+#about .about-name{
+  letter-spacing: .4px;
+}
+
+#about .about-line{
+  animation: textFadeUp .6s ease-out .1s both;
+}
+
+#about .about-contact{
+  animation: textFadeUp .6s ease-out .2s both;
+}
+
+@keyframes textFadeUp{
+  from{
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to{
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 스포어랑 연결되는 결 */
+#about .frame{
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.04),
+    0 20px 60px rgba(0,0,0,.08);
+}
+
+#about .frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 30% 30%,
+      rgba(0,0,0,.03),
+      transparent 60%);
+}
 
   </style>
 </head>
@@ -337,7 +412,6 @@
             <input type="checkbox" id="captionToggle">
             <span class="slider"></span>
           </label>
-          <span style="font-size:13px;">Caption</span>
         </div>
       </div>
     </section>
