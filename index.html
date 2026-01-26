@@ -11,6 +11,20 @@
   <link rel="preconnect" href="https://github.com">
   <link rel="dns-prefetch" href="https://github.com">
   <style>
+    /* Filter guide image */
+.filter-guide{
+  display:flex;
+  justify-content:center;
+  margin-bottom:10px;
+  pointer-events:none; /* 버튼 클릭 방해 안 하게 */
+}
+
+.filter-guide img{
+  width:100px;          /* 필요하면 조절 */
+  max-width:20vw;
+  opacity:0.9;
+  margin-left:+1000px;
+}
     :root{ --bg:#ffffff; --card:#ffffff; --text:#111213; --muted:#666b74; --line:#e9eaee; --ring:rgba(0,0,0,.06); --shadow:0 18px 50px rgba(0,0,0,.06); }
     *{box-sizing:border-box}
     html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'S-CoreDream',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.1px}
@@ -139,6 +153,9 @@
     <!-- Filters -->
     <section aria-label="필터">
       <div class="filters" role="group" aria-label="작품 필터">
+         <div class="filter-guide">
+    <img src="https://github.com/user-attachments/assets/fa5b44ac-0c1f-4b03-a14e-7c676f054416" alt="필터 안내: 클릭해보세요">
+  </div>
         <div class="filters-bar">
           <!-- Left: 전체 + 연도 -->
           <div class="filters-left" aria-label="왼쪽 필터 묶음">
